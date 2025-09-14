@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>ЛР2 — 2.1 Объявление стилей (встроенные стили)</title>
+        <!-- Стили объявлены прямо в документе -->
+        <style>
+            /* Заголовки второго уровня будут красными */
+            h2 { color: #d90429; }
+
+            /* Класс можно присвоить любому количеству элементов */
+            .accent { color: #2b2d42; background: #edf2f4; padding: .25rem .5rem; }
+
+            /* Идентификатор должен быть уникальным на странице */
+            #promo { border: 2px dashed #8d99ae; padding: .75rem; }
+
+            /* Task 1*/
+            /* Вложенные нумерованные списки с разными типами нумерации */
+            .lvl-1 { 
+                list-style: decimal; 
+                padding-left: 1.25rem; 
+                color: #2b2d42;
+            }
+            .lvl-2 { 
+                list-style: decimal; 
+                padding-left: 1.25rem; 
+                margin-top: .5rem; 
+                color: #d90429;
+            }
+
+            .grid { 
+                display: grid; 
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
+                gap: 12px; 
+            }
+            .card { 
+                background: #e9ecef; 
+                border-radius: 12px; 
+                padding: 24px; 
+                text-align: center; 
+                font-weight: 700; 
+            }
+            .first {
+                background-color: #d90429;
+            }
+            .second {
+                background-color: yellow;
+            }
+
+            .gallery { 
+                display: grid; 
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
+                gap: 10px; 
+            }
+            .gallery img { 
+                width: 100%; 
+                height: 180px; 
+                object-fit: cover; 
+                border-radius: 10px; 
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Объявление стилей: встроенные стили</h1>
+        <h2>Этот заголовок красный</h2>
+        <p>Абзац без классов. По умолчанию наследует базовые стили браузера.</p>
+        <p class="accent">Абзац с классом <code>.accent</code>. Класс можно
+            повторить.</p>
+        <div id="promo">
+            <h3>Блок с id <code>#promo</code></h3>
+            <p>Идентификатор должен использоваться один раз на странице.</p>
+        </div>
+
+        <!--Task 1-->
+        <section>
+            <h2>Оглавление</h2>
+            <ol class="toc lvl-1">
+                <li>Введение</li>
+                <li>Обработка информации в электронных таблицах
+                    <ol class="lvl-2">
+                        <li>Табличный процессор</li>
+                        <li>Редактирование и форматирование</li>
+                        <li>Встроенные функции</li>
+                        <li>Инструменты анализа данных</li>
+                    </ol>
+                </li>
+                <li>Алгоритмы и элементы программирования
+                    <ol class="lvl-2">
+                        <li>Основные сведения об алгоритмах</li>
+                        <li>Алгоритмические структуры</li>
+                        <li>Запись алгоритмов на языках</li>
+                        <li>Структурированные типы данных. Массивы.</li>
+                        <li>Структурное программирование</li>
+                    </ol>
+                </li>
+                <li>Информационное моделирование
+                    <ol class="lvl-2">
+                        <li>Модели и моделирование</li>
+                        <li>Моделирование на графах</li>
+                        <li>База данных как модель</li>
+                        <li>СУБД</li>
+                    </ol>
+                </li>
+                <li>Сетевые информационные технологии
+                    <ol class="lvl-2">
+                        <li>Основы построения компьютерных сетей</li>
+                        <li>Службы Интернета</li>
+                        <li>Интернет как ГИС</li>
+                    </ol>
+                </li>
+                <li>Основы социальной информатики
+                    <ol class="lvl-2">
+                        <li>Информационное общество</li>
+                        <li>Информационное право и безопасность</li>
+                    </ol>
+                </li>
+                <li>Заключение</li>
+            </ol>
+        </section>
+
+        <!--Task 2-->
+
+        <section>
+            <h2>Плитка блоков</h2>
+            <div class="grid">
+                <div class="card first">1</div>
+                <div class="card second">2</div>
+                <div class="card third">3</div>
+                <div class="card fourth">4</div>
+            </div>
+        </section>
+
+        <!--Task 3-->
+
+        <section>
+            <h2>Изображения</h2>
+            <figure class="gallery">
+                <img src="static/image1.jpg" alt="Фото 1">
+                <img src="static/image2.jpg" alt="Фото 2">
+                <img src="static/image3.png" alt="Фото 3">
+                <img src="static/image4.png" alt="Фото 4">
+            </figure>
+        </section>
+    </body>
+</html>

@@ -1,0 +1,26 @@
+.cities {
+  border-collapse: collapse;
+  width: 700px;
+  margin-top: 20px;
+}
+
+.cities th,
+.cities td {
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+}
+
+.cities th {
+  background: #f9f9f9;
+  text-align: left;
+}
+
+.cities tbody tr:nth-child(even) {
+  background: #e6e6e6;
+}
+
+.cities tbody tr:hover {
+  background: #007BFF; /* синий фон при наведении */
+  color: #fff;         /* белый текст */
+  cursor: pointer;
+}

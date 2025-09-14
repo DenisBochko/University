@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            border-collapse: collapse;
+        }
+
+        table {
+            border: 1px solid black;
+        }
+        .only-sides td {
+            border-top: none;
+            border-bottom: none;
+            border-left: 1px solid black;
+            border-right: 1px solid black;
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            
+        }
+        th{
+            border: 1px solid black;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <table class="only-sides">
+        <tr>
+            <th>Университет</th>
+            <th>Количество студентов</th>
+            <th>Год основания</th>
+            <th>Адрес</th>
+        </tr> 
+        <tr>
+            <td>ДГТУ</td>
+            <td>46000</td>
+            <td>1930</td>
+            <td>Гагарина 1</td>
+        </tr>
+        <tr>
+            <td>ЮФУ</td>
+            <td>33125</td>
+            <td>2006</td>
+            <td>Садовая 105</td>
+        </tr>
+        <tr>
+            <td>РИНХ</td>
+            <td>21636</td>
+            <td>1931</td>
+            <td>Садовая 69</td>
+        </tr>
+    </table>
+</body>
+</html>

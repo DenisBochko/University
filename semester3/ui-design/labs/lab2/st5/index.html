@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <style>
+            /* Сброс лишних отступов и нормализация */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background: #fafafa;
+  padding: 20px;
+}
+
+/* Общие заголовки */
+h1 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #000000;
+  text-align: center;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #303d48;
+}
+
+/* Секция с направлениями */
+#travel {
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+#travel p {
+  margin-bottom: 1rem;
+}
+
+#travel ul {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  list-style: none;
+  margin-bottom: 2rem;
+}
+
+img { width: 100%; max-width: 720px; height: 360px; object-fit: cover; border-radius: 10px; }
+        </style>
+    </head>
+    <body>
+        <section id="travel">
+            <h1>Осенние путешествия по России</h1>
+            <p>У осени своё очарование... Выбирайте одно из направлений:</p>
+            <ul>
+                <li><a href="#derbent">Дербент</a></li>
+                <li><a href="#kislovodsk">Кисловодск</a></li>
+                <li><a href="#gelendzhik">Геленджик</a></li>
+            </ul>
+
+            <article id="derbent">
+                <h2>Дербент</h2>
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKw2oR1GB86aCbH-oot98XPye1KSj56j6Zxw&s" alt="Нарзанная галерея">
+                <p>Пляжный сезон, Каспийское море, богатая экскурсионная
+                    программа.</p>
+                <p><a href="sight.html#derbent">Достопримечательности
+                        Дербента</a></p>
+            </article>
+
+            <article id="kislovodsk">
+                <h2>Кисловодск</h2>
+                <p>Ясные дни, Курортный парк, гора Машук.</p>
+                <img src="https://7d9e88a8-f178-4098-bea5-48d960920605.selcdn.net/d93d2e41-16cf-4de5-a4cf-cac336945522//-/format/auto/-/quality/smart_retina/-/stretch/off/-/resize/1900x/
+" alt="Нарзанная галерея">
+                <p><a href="sight.html#kislovodsk">Достопримечательности
+                        Кисловодска</a></p>
+            </article>
+
+            <article id="gelendzhik">
+                <h2>Геленджик</h2>
+                <p>Бархатный сезон, длинная набережная, сосны и аквапарк.</p>
+                <p><a href="sight.html#gelendzhik">Достопримечательности
+                        Геленджика</a></p>
+            </article>
+        </section>
+    </body>
+</html>

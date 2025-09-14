@@ -1,0 +1,21 @@
+/* Таблица из задания */
+.table {
+  border-collapse: collapse; /* объединить границы соседних ячеек */
+  width: 500px;
+}
+
+.table td,
+.table th {
+  border: 1px solid #ccc;
+  padding: 5px 10px;
+}
+
+.table thead {
+  background: #f0f1f4;
+}
+
+.table tfoot {
+  background: #121212;
+  color: #fff;
+  text-align: right;
+}
