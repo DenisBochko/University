@@ -31,13 +31,9 @@ void b() {
     int symbol, count = 0;
 
     while ((symbol = getchar()) != '.') {
-        if (symbol == 'e') {
-            count++;
-        }
+        if (symbol == 'e') count++;
 
-        if (symbol == 'u') {
-            break;
-        }
+        if (symbol == 'u') break;
     }
 
     printf("Количество символов 'e', перед 'u':%d\n", count);
@@ -47,15 +43,10 @@ void c() {
     int symbol1, symbol2, count = 0;
 
     while (true) {
-        if ((symbol1 = getchar()) == '.') {
-            break;
-        } else if ((symbol2 = getchar()) == '.') {
-            break;
-        }
+        if ((symbol1 = getchar()) == '.') break;
+            else if ((symbol2 = getchar()) == '.') break;
 
-        if ((symbol1 == 'n' && symbol2 == 'o') || (symbol1 == 'o' && symbol2 == 'n')) {
-            count++;
-        }
+        if ((symbol1 == 'n' && symbol2 == 'o') || (symbol1 == 'o' && symbol2 == 'n')) count++;
     }
 
     printf("Количество сочетаний 'on' или 'no':%d\n", count);
@@ -66,17 +57,11 @@ void d() {
     int count_of_plus = 0, count_of_minus = 0, count_of_alternating = 0;
 
     while ((current_symbol = getchar()) != '.') {
-        if (current_symbol == '+') {
-            count_of_plus++;
-        }
+        if (current_symbol == '+') count_of_plus++;
 
-        if (current_symbol == '-') {
-            count_of_minus++;
-        }
+        if (current_symbol == '-') count_of_minus++;
  
-        if ((previous_symbol == '-' && current_symbol == '+') || (previous_symbol == '+' && current_symbol == '-')) {
-            count_of_alternating++;
-        }
+        if ((previous_symbol == '-' && current_symbol == '+') || (previous_symbol == '+' && current_symbol == '-')) count_of_alternating++;
 
         previous_symbol = current_symbol;
     }
@@ -91,9 +76,7 @@ void e() {
     int count = 0;
 
     while ((current_symbol = getchar()) != '.') {
-        if (previous_previous_symbol == 'c' && previous_symbol == '+' && current_symbol == '+') {
-            count++;
-        }
+        if (previous_previous_symbol == 'c' && previous_symbol == '+' && current_symbol == '+') count++;
 
         previous_previous_symbol = previous_symbol;
         previous_symbol = current_symbol;
@@ -127,13 +110,9 @@ void g() {
             current_len++;
             previous_symbol = current_symbol;
 
-            if (current_len > max_len) {
-                max_len = current_len;
-            }
+            if (current_len > max_len) max_len = current_len;
         } else {
-            if (current_len > max_len) {
-                max_len = current_len;
-            }
+            if (current_len > max_len) max_len = current_len;
 
             previous_symbol = 'a' - 1;
             current_len = 0;
