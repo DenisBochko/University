@@ -1,1 +1,10 @@
-.DS_Store
+*
+
+!*/
+
+!*.txt
+!*.html
+!*.cpp
+!*.css
+!*.js
+!*.md
