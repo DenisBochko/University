@@ -30,5 +30,13 @@ chmod g+x,o+x t3.txt
 # -rw-r-xr-x  1 denis  staff   0 17 сен 09:37 t2.txt
 # -rw-r-xr-x  1 denis  staff   0 17 сен 09:40 t3.txt
 
+mkdir second
+ln -s t3.txt /second/new-t3.txt
+
+cd second
+ls -a 
+# new-t2.txt
+
+
 '''
 
