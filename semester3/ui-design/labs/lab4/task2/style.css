@@ -1,0 +1,70 @@
+.blocks {
+    float: relative;
+    clear: none;
+    /* Можно установить left или right по необходимости */
+    padding-bottom: 5px;
+    /* Расстояние между миниатюрами */
+    padding-right: 5px;
+    /* Расстояние между миниатюрами и окружающим текстом */
+    margin-left: 700px;
+    /* Отступ слева для центрирования */
+}
+
+.resize_thumb {
+    /* Вводим нужный размер миниатюры здесь */
+    width: 150px;
+    height: 100px;
+}
+
+.blocks a {
+    display: block;
+    text-decoration: none;
+    /* Убираем подчеркивание ссылки */
+    cursor: default;
+    /* Меняем указатель мыши на обычный */
+}
+
+.blocks a:hover {
+    position: relative;
+}
+
+.blocks span img {
+    border: 1px solid #FFFFFF;
+    /* Добавляем рамку вокруг изображения */
+    margin-bottom: 8px;
+    /* Сдвигаем текст вниз от изображения */
+    width: 100%;
+    /* Размер картинки по всей площади блока */
+}
+
+.blocks a span {
+    position: absolute;
+    display: none;
+    color: #FFFFFF;
+    /* Цвет названия */
+    text-decoration: none;
+    /* Убираем подчеркивание ссылки */
+    font-family: Arial, Helvetica, sans-serif;
+    /* Устанавливаем шрифты */
+    font-size: 13px;
+    /* Размер шрифта названия */
+    background-color: rgba(0, 0, 0, 0.7);
+    /* Делаем фон появляющегося блока прозрачным */
+    padding-top: 10px;
+    /* Вводим отступы */
+    padding-right: 10px;
+    padding-bottom: 13px;
+    padding-left: 10px;
+}
+
+.blocks a:hover span {
+    display: block;
+    top: 50px;
+    /* Большое изображение появляется вверху на 50px от миниатюры */
+    left: 90px;
+    /* Большое изображение появляется справа на 90px от миниатюры */
+    width: 80%;
+    /* Процентное соотношение размера блока со страницей */
+    opacity: 0.97;
+    /* Небольшая прозрачность большого изображения */
+}
