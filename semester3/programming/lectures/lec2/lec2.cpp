@@ -30,9 +30,11 @@ void func(void) {
 // Пример1
 void pop();
 void pop1(int i);
+int factorial(int n);
+void Printd(int n);
 
 int main() {
-    pop1(1);
+    Printd(123);
 
     return 0;
 }
@@ -52,8 +54,32 @@ void pop1(int i) {
     pop1(i + 1);
 }
 
-/*
-Формы рекурсиных функций
+// Вычисление факториала
+int factorial(int n) {
+    if (n <= 1) {
+        return 1;
+    }
 
+    return factorial(n - 1) * n;
+}
 
-*/
+// Список (присваивание последнего справа элемента)
+void list() {
+    int a, b, c;
+
+    a = (b = 1, c = 3, 12);
+    printf("a = %d, b = %d, c = %d", a, b, c);
+}
+
+// Печатаем число в виде строки символов
+void Printd(int n) {
+    if (n < 0) {
+        putchar('-');
+        n = -n;
+    }
+
+    if (n) {
+        Printd(n / 10);
+        putchar(n % 10 + '0');
+    }
+}
