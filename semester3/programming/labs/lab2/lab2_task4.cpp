@@ -15,7 +15,7 @@ void k();
 void l();
 
 int main() {
-    f();
+    k();
 
     return 0;
 }
@@ -99,14 +99,14 @@ void f() {
 
 void g() {
     int c = 0;
-    int star_run = 0;
+    int sr = 0;
 
     while ((c = getchar()) != '.') {
         if (c == '*') {
-            star_run++;
+            sr++;
         } else {
-            if (star_run > 0) {
-                int out = star_run / 2;
+            if (sr > 0) {
+                int out = sr / 2;
 
                 if (out == 0) {
                     putchar('*');
@@ -116,7 +116,7 @@ void g() {
                     }
                 }
                 
-                star_run = 0;
+                sr = 0;
             }
 
             putchar(c);
@@ -124,8 +124,8 @@ void g() {
     }
 
     // хвост
-    if (star_run) {
-        int out = star_run / 2;
+    if (sr) {
+        int out = sr / 2;
 
         if (out == 0) {
             putchar('*');
@@ -137,68 +137,117 @@ void g() {
     }
 }
 
+/*
+asd123.
+asd000012300sad012.
+*/
 void h() {
     int c;
-
-    int in_digits = 0;      // сейчас внутри группы цифр?
-    int seen_nonzero = 0;   // внутри текущей группы уже встречалась ненулевая цифра?
-    int zero_count = 0;     // сколько ведущих нулей накопили (пока не печатаем)
+    int fg = 0;     // внутри группы
+    int fn = 0;     // встретили ненулевую цифру
+    int zeros = 0;  // количество нулей в начале
 
     while ((c = getchar()) != '.') {
         if (isdigit(c)) {
-            // встретили цифру
-            if (!in_digits) {
-                // начали новую группу
-                in_digits = 1;
-                seen_nonzero = 0;
-                zero_count = 0;
-            }
+            fg = 1;
 
-            if (!seen_nonzero) {
-                if (c == '0') {
-                    // ведущий ноль: пока просто копим счётчик и ничего не печатаем
-                    zero_count++;
-                } else {
-                    // первая ненулевая цифра: печатаем её,
-                    putchar(c);
-                    seen_nonzero = 1;
-                }
-            } else {
-                // уже была ненулевая: печатаем все последующие цифры как есть
-                putchar(c);
+            if (c == '0' && !fn) zeros++; // копим ведущие нули
+            else {
+                if (!fn) fn = 1;    // если до этого были нули, то просто их игнорируем
+                putchar(c);         // печатаем первую ненулевую и все следующие
             }
-
         } else {
-            // встретили не цифру: группа закончилась
-            if (in_digits) {
-                if (!seen_nonzero && zero_count > 0) {
-                    // вся группа была нулями, то печатаем один '0'
-                    putchar('0');
-                }
-                // сбрасываем состояние группы
-                in_digits = 0;
+            if (fg) {
+                if (!fn) putchar('0'); // группа состояла только из нулей
+                fg = fn = zeros = 0;
             }
 
-            // сам нецифровой символ копируем как есть
             putchar(c);
         }
     }
 
     // хвост
-    if (in_digits && !seen_nonzero && zero_count > 0) {
-        putchar('0');
+    if (fg) if (!fn) putchar('0');
+}
+
+void i() {
+    int c;
+    int a = 0, b = 0, d = 0;
+
+    while ((c = getchar()) != '.') {
+        a = b; b = d; d = c;
+
+        if (a != 't' && b != 'h' && d != 'e') {
+            if (a != 0) putchar(a);
+        } else {
+            b = 0; d = 0;
+        }
     }
 }
 
-// void i() {
-//     int c0, c1, c2;
+// asd0123asd321.
+// asd0123asd
+void j() {
+    int ch;                      // текущий символ
+    bool in_group = false;       // находимся ли внутри цифровой группы
+    int first_digit = 0;         // код первой цифры группы ('0'..'9')
+    int prev_digit = 0;          // код предыдущей цифры в группе
+    int group_len = 0;           // длина текущей группы
+    bool is_consecutive = true;  // каждая следующая = предыдущая + 1
 
-//     while ((c0 = getchar()) != '.') {
-//         if (c2 == 't', c1 == 'h', c0 == 'e') {
+    while ((ch = getchar()) != '.') {
+        if (ch >= '0' && ch <= '9') {
+            if (!in_group) {
+                in_group = true;
+                first_digit = ch;
+                prev_digit = ch;
+                group_len = 1;
+                is_consecutive = true;
+            } else {
+                if (is_consecutive && ch == prev_digit + 1) {
+                    prev_digit = ch;
+                    group_len++;
+                } else {
+                    // всё ещё «в группе», но уже невалидной
+                    prev_digit = ch;
+                    group_len++;
+                    is_consecutive = false;
+                }
+            }
+        } else {
+            // граница группы
+            if (in_group && is_consecutive && group_len >= 2) {
+                // печатаем весь диапазон от first_digit длиной group_len
+                for (int i = 0; i < group_len; ++i) {
+                    putchar(first_digit + i);
+                }
+            }
+            in_group = false;
+            putchar(ch); // нецифровой символ копируем как есть
+        }
+    }
 
-//         }
-//     }
-// }
+    // разбор хвоста перед точкой
+    if (in_group && is_consecutive && group_len >= 2) {
+        for (int i = 0; i < group_len; ++i) {
+            putchar(first_digit + i);
+        }
+    }
+}
+
+void k() {
+    int a = 0, b = 0, c = 0, d = 0, e = 0;
+
+    while ((e = getchar()) != '.') {
+        putchar(e);
+        
+        if (a == 'c' && b == 'h' && c == 'i' && d == 'l' && e == 'd') {
+            putchar('r'); putchar('e'); putchar('n'); 
+        }
+
+        a = b; b = c; c = d; d = e; 
+    }
+}
 
 void l() {
     int c = 0;
