@@ -1,128 +1,99 @@
-#include <iostream>
 #include <cstdio>
 
-void a();
-void b();
-void c();
-void d();
-void e();
-void f();
-void g();
+int a(); 
+int b(); 
+int c(); 
+int d(); 
+int e(); 
+int f(); 
+int g(); 
 
 int main() {
-    g();
+    // printf("%d\n", a());
+    // printf("%d\n", b());
+    // printf("%d\n", c());
+    // printf("%d\n", d());
+    // printf("%d\n", e());
+    // printf("%d\n", f());
+    // printf("%d\n", g());
 
     return 0;
 }
 
-void a() {
-    int symbol, count = 0;
+int a() {
+    int a = 0, b;
+    while ((b = getchar()) != '.') {
+        if (b == 'a') a++;
+    }
+    return a;
+}
 
-    while ((symbol = getchar()) != '.') {
-        if (symbol == 'a') {
-            count++;
+int b() {
+    int a = 0, b;
+    while ((b = getchar()) != '.' && b != 'u') {
+        if (b == 'e') a++;
+    }
+
+    return a;
+}
+
+int c() {
+    int a = 0, b = -1, c1;
+    while ((c1 = getchar()) != '.') {
+        if ((b == 'n' && c1 == 'o') || (b == 'o' && c1 == 'n')) a++;
+        b = c1;
+    }
+    return a;
+}
+
+int d() {
+    int a = 0;
+    int b = 0;
+    int c1;
+    while ((c1 = getchar()) != '.') {
+        if (c1 == '+' || c1 == '-') {
+            if (b != 0 && c1 != b) a++;
+            b = c1;
         }
     }
-
-    printf("Количество символов 'a':%d\n", count);
+    return a;
 }
 
-void b() {
-    int symbol, count = 0;
-
-    while ((symbol = getchar()) != '.') {
-        if (symbol == 'e') count++;
-
-        if (symbol == 'u') break;
+int e() {
+    int a = 0, b = -1, c1 = -1, d1;
+    while ((d1 = getchar()) != '.') {
+        if (b == 'c' && c1 == '+' && d1 == '+') a++;
+        b = c1;
+        c1 = d1;
     }
-
-    printf("Количество символов 'e', перед 'u':%d\n", count);
+    return a;
 }
 
-void c() {
-    int symbol1, symbol2, count = 0;
+int f() {
+    int a = -1, b = -1, c1 = -1, d1;
+    while ((d1 = getchar()) != '.') {
 
-    while (true) {
-        if ((symbol1 = getchar()) == '.') break;
-            else if ((symbol2 = getchar()) == '.') break;
-
-        if ((symbol1 == 'n' && symbol2 == 'o') || (symbol1 == 'o' && symbol2 == 'n')) count++;
+        a = b; b = c1; c1 = d1;
+        if (a == 'c' && b == 'h' && c1 == 'a' && d1 == 'r') return 1;
     }
-
-    printf("Количество сочетаний 'on' или 'no':%d\n", count);
+    return 0;
 }
 
-void d() {
-    int previous_symbol = 0, current_symbol = 0;
-    int count_of_plus = 0, count_of_minus = 0, count_of_alternating = 0;
-
-    while ((current_symbol = getchar()) != '.') {
-        if (current_symbol == '+') count_of_plus++;
-
-        if (current_symbol == '-') count_of_minus++;
- 
-        if ((previous_symbol == '-' && current_symbol == '+') || (previous_symbol == '+' && current_symbol == '-')) count_of_alternating++;
-
-        previous_symbol = current_symbol;
-    }
-
-    printf("Количество плюсов: %d\n", count_of_plus);
-    printf("Количество минусов: %d\n", count_of_minus);
-    printf("Количество чередующихся: %d\n", count_of_alternating);
-}
-
-void e() {
-    int previous_previous_symbol = 0, previous_symbol = 0, current_symbol = 0;
-    int count = 0;
-
-    while ((current_symbol = getchar()) != '.') {
-        if (previous_previous_symbol == 'c' && previous_symbol == '+' && current_symbol == '+') count++;
-
-        previous_previous_symbol = previous_symbol;
-        previous_symbol = current_symbol;
-    }
-     
-    printf("Количество 'c++': %d\n", count);
-}
-
-void f() {
-    int c0 = -1, c1 = -1, c2 = -1, c3 = -1;
-    int c;
-
-    while ((c = getchar()) != '.') {
-        c0 = c1; c1 = c2; c2 = c3; c3 = c;
-        if (c0 == 'c' && c1 == 'h' && c2 == 'a' && c3 == 'r') {
-            puts("YES");
-            return;
-        }
-    }
-
-    puts("NO");
-}
-
-void g() {
-    // Реализовал только со строчными буквами.
-    int max_len = 0, current_len = 0;
-    int previous_symbol = 'a' - 1, current_symbol = 0;
-
-    while ((current_symbol = getchar()) != '.') {
-        if ((current_symbol - previous_symbol) == 1) {
-            current_len++;
-            previous_symbol = current_symbol;
-
-            if (current_len > max_len) max_len = current_len;
+int g() {
+    int a = 0; 
+    int b = 0; 
+    int c1 = 0;
+    int d1;
+    while ((d1 = getchar()) != '.') {
+        if (c1 != 0 && d1 == c1 + 1 && d1 >= 'a' && d1 <= 'z' && c1 >= 'a' && c1 <= 'z') {
+            b++;
+        } else if (d1 >= 'a' && d1 <= 'z') {
+            b = 1;
         } else {
-            if (current_len > max_len) max_len = current_len;
-
-            previous_symbol = 'a' - 1;
-            current_len = 0;
+            b = 0;
         }
+        c1 = d1;
+        if (b > a) a = b;
     }
-
-    if (max_len > 0) {
-        printf("Последовательность началась с латинского алфавита, максимальная длинна: %d\n", max_len);
-    } else {
-        puts("Последовательгость не началась с букв латинского алфавита\n");
-    }
+    return a;
 }
-
