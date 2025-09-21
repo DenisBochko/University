@@ -14,7 +14,7 @@ int main() {
     // printf("%d\n", c());
     // printf("%d\n", d());
     // printf("%d\n", e());
-    // printf("%d\n", f());
+    printf("%d\n", f());
     // printf("%d\n", g());
 
     return 0;
@@ -70,12 +70,16 @@ int e() {
 }
 
 int f() {
-    int a = -1, b = -1, c1 = -1, d1;
-    while ((d1 = getchar()) != '.') {
+    int c0 = -1, c1 = -1, c2 = -1, c3 = -1;
+    int c;
 
-        a = b; b = c1; c1 = d1;
-        if (a == 'c' && b == 'h' && c1 == 'a' && d1 == 'r') return 1;
+    while ((c = getchar()) != '.') {
+        c0 = c1; c1 = c2; c2 = c3; c3 = c;
+        if (c0 == 'c' && c1 == 'h' && c2 == 'a' && c3 == 'r') {
+            return 1;
+        }
     }
+
     return 0;
 }
 
