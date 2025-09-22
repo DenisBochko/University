@@ -23,22 +23,16 @@ int main() {
 void a() {
     int c;
     while ((c = getchar()) != '.') {
-        if (c == '?') {
-            putchar('!');
-        } else {
-            putchar(c);
-        }
+        if (c == '?') putchar('!');
+        else putchar(c);
     }
 }
 
 void b() {
     int c;
     while ((c = getchar()) != '.') {
-        if (c == '-') {
-            continue;
-        } else if (c == '&') {
-            putchar(c);
-        }
+        if (c == '-') continue;
+        else if (c == '&') putchar(c);
 
         putchar(c);
     }
@@ -48,9 +42,7 @@ void c() {
    int c;
 
     while ((c = getchar()) != '.') {
-        if ((c >= 'a') && (c <= 'z')) {
-            putchar(c);
-        }
+        if ((c >= 'a') && (c <= 'z')) putchar(c);
     } 
 }
 
@@ -102,15 +94,12 @@ void g() {
     int sr = 0;
 
     while ((c = getchar()) != '.') {
-        if (c == '*') {
-            sr++;
-        } else {
+        if (c == '*') sr++;
+        else {
             if (sr > 0) {
                 int out = sr / 2;
 
-                if (out == 0) {
-                    putchar('*');
-                } else {
+                if (out == 0) putchar('*'); else {
                     for (int i = 0; i < out; i++) {
                         putchar('+');
                     }
@@ -127,13 +116,8 @@ void g() {
     if (sr) {
         int out = sr / 2;
 
-        if (out == 0) {
-            putchar('*');
-        } else {
-            for (int i = 0; i < out; i++) {
-                putchar('+');
-            }
-        }
+        if (out == 0) putchar('*');
+        else for (int i = 0; i < out; i++) putchar('+');
     }
 }
 
@@ -177,62 +161,50 @@ void i() {
     while ((c = getchar()) != '.') {
         a = b; b = d; d = c;
 
-        if (a != 't' && b != 'h' && d != 'e') {
-            if (a != 0) putchar(a);
-        } else {
-            b = 0; d = 0;
-        }
+        if (a != 't' && b != 'h' && d != 'e') if (a != 0) putchar(a);
+        else b = 0; d = 0;
     }
 }
 
 // asd0123asd321.
 // asd0123asd
 void j() {
-    int ch;                      // текущий символ
-    bool in_group = false;       // находимся ли внутри цифровой группы
-    int first_digit = 0;         // код первой цифры группы ('0'..'9')
-    int prev_digit = 0;          // код предыдущей цифры в группе
-    int group_len = 0;           // длина текущей группы
-    bool is_consecutive = true;  // каждая следующая = предыдущая + 1
+    int c;            // текущий символ
+    bool fg = false;  // находимся ли внутри цифровой группы
+    int fd = 0;       // код первой цифры группы ('0'..'9')
+    int pd = 0;       // код предыдущей цифры в группе
+    int ln = 0;       // длина текущей группы
+    bool flag = true; // каждая следующая = предыдущая + 1 (группа валидна)
 
-    while ((ch = getchar()) != '.') {
-        if (ch >= '0' && ch <= '9') {
-            if (!in_group) {
-                in_group = true;
-                first_digit = ch;
-                prev_digit = ch;
-                group_len = 1;
-                is_consecutive = true;
+    while ((c = getchar()) != '.') {
+        if (c >= '0' && c <= '9') {
+            if (!fg) {
+                fg = true;
+                fd = c;
+                pd = c;
+                ln = 1;
+                flag = true;
             } else {
-                if (is_consecutive && ch == prev_digit + 1) {
-                    prev_digit = ch;
-                    group_len++;
+                if (flag && c == pd + 1) {
+                    pd = c;
+                    ln++;
                 } else {
                     // всё ещё «в группе», но уже невалидной
-                    prev_digit = ch;
-                    group_len++;
-                    is_consecutive = false;
+                    pd = c;
+                    ln++;
+                    flag = false;
                 }
             }
         } else {
-            // граница группы
-            if (in_group && is_consecutive && group_len >= 2) {
-                // печатаем весь диапазон от first_digit длиной group_len
-                for (int i = 0; i < group_len; ++i) {
-                    putchar(first_digit + i);
-                }
-            }
-            in_group = false;
-            putchar(ch); // нецифровой символ копируем как есть
+            if (fg && flag && ln >= 2) for (int i = 0; i < ln; ++i) putchar(fd + i);
+
+            fg = false;
+            putchar(c);
         }
     }
 
-    // разбор хвоста перед точкой
-    if (in_group && is_consecutive && group_len >= 2) {
-        for (int i = 0; i < group_len; ++i) {
-            putchar(first_digit + i);
-        }
-    }
+    // хвост
+    if (fg && flag && ln >= 2) for (int i = 0; i < ln; ++i) putchar(fd + i);
 }
 
 void k() {
