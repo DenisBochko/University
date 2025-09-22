@@ -47,16 +47,19 @@ int c() {
 }
 
 int d() {
-    int a = 0;
-    int b = 0;
-    int c1;
-    while ((c1 = getchar()) != '.') {
-        if (c1 == '+' || c1 == '-') {
-            if (b != 0 && c1 != b) a++;
-            b = c1;
-        }
+    int a = 0, c = 0;
+    int cp = 0, cm = 0, ca = 0;
+
+    while ((c = getchar()) != '.') {
+        if (c == '+') cp++;
+        if (c == '-') cm++;
+
+        if ((a == '-' && c == '+') || (a == '+' && c == '-')) ca++;
+
+        a = c;
     }
-    return a;
+
+    return ca;
 }
 
 int e() {
