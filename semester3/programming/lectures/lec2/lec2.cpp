@@ -32,9 +32,13 @@ void pop();
 void pop1(int i);
 int factorial(int n);
 void Printd(int n);
+int gcd(int n, int m);
+int mgcd(int a, int b);
+double sum(double s[], int n);
 
 int main() {
-    Printd(123);
+    double s[5] = {1, 2, 3, 4, 5};
+    cout << sum(s, 5);
 
     return 0;
 }
@@ -82,4 +86,48 @@ void Printd(int n) {
         Printd(n / 10);
         putchar(n % 10 + '0');
     }
+}
+
+// Вычисление НОД (наибольший общий делитель) через инерационную и рекурсивную функкцию
+
+// Рекурсивный 
+int gcd(int n, int m) {
+    while (n != m) {
+        if (n > m) {
+            n=n-m;
+        } else {
+            m = m - n;
+        }
+    }
+
+    return n;
+}
+
+// Модернизированный алогоритм
+int mgcd(int a, int b) {
+    if (a == 0) return b < 0 ? -b : b;
+    if (b == 0) return a < 0 ? -a : a;
+    if (a < 0) a = -a;
+    if (b < 0) b = -b;
+    while (b != 0) {
+        int r = a % b;
+        a = b;
+        b = r;
+    }
+
+    return a;
+}
+
+// рекурсивные числа фиббоначи
+int fib(int n) {
+    if (n <= 1)
+        return n;
+    return fib(n - 1) + fib(n - 2);
+}
+
+// вычисление суммы элементов массива
+double sum(double s[], int n) {
+    if (n == 1) return s[0];
+
+    return sum(s, n - 1) + s[n - 1];
 }
