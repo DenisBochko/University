@@ -124,6 +124,9 @@ void g() {
 /*
 asd123.
 asd000012300sad012.
+
+// 30 000 003 9009
+// 30 0 3 9009
 */
 void h() {
     int c;
@@ -142,7 +145,7 @@ void h() {
             }
         } else {
             if (fg) {
-                if (!fn) putchar('0'); // группа состояла только из нулей
+                if (!fn) putchar('0');
                 fg = fn = zeros = 0;
             }
 
@@ -154,6 +157,7 @@ void h() {
     if (fg) if (!fn) putchar('0');
 }
 
+// the_t_h_e_e_h_eht.
 void i() {
     int c;
     int a = 0, b = 0, d = 0;
@@ -161,8 +165,11 @@ void i() {
     while ((c = getchar()) != '.') {
         a = b; b = d; d = c;
 
-        if (a != 't' && b != 'h' && d != 'e') if (a != 0) putchar(a);
-        else b = 0; d = 0;
+        if (a != 't' && b != 'h' && d != 'e') {
+            if (a != 0) putchar(a);
+        } else {
+            b = 0; d = 0;
+        }
     }
 }
 
@@ -207,6 +214,7 @@ void j() {
     if (fg && flag && ln >= 2) for (int i = 0; i < ln; ++i) putchar(fd + i);
 }
 
+// children.
 void k() {
     int a = 0, b = 0, c = 0, d = 0, e = 0;
 
