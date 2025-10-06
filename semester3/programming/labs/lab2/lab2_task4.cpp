@@ -15,7 +15,7 @@ void k();
 void l();
 
 int main() {
-    k();
+    i();
 
     return 0;
 }
@@ -159,17 +159,22 @@ void h() {
 
 // the_t_h_e_e_h_eht.
 void i() {
-    int c;
-    int a = 0, b = 0, d = 0;
+    int a = 0, b = 0, c = 0;
 
     while ((c = getchar()) != '.') {
-        a = b; b = d; d = c;
-
-        if (a != 't' && b != 'h' && d != 'e') {
-            if (a != 0) putchar(a);
-        } else {
-            b = 0; d = 0;
+        if (a == 't' && b == 'h' && c == 'e') {
+            a = b = 0;
+            continue;
         }
+
+        putchar(a);
+        a = b;
+        b = c;
+    }
+
+    if (!(a == 't' && b == 'h')) {
+        if (a != 0) putchar(a);
+        if (b != 0) putchar(b);
     }
 }
 
