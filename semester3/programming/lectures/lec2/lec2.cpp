@@ -35,11 +35,15 @@ double factoriald(double n);
 void Printd(int n);
 int gcd(int n, int m);
 int mgcd(int a, int b);
-double sum(double s[], int n);
 double rect_fact_do(int i, int m, double mult);
+double rec_degree(double x, int n);
+int sum(int* s, int n);
 
 int main() {
-    cout << '0';
+    int a[3] = {1, 2, 3};
+
+    cout << sum(a, 3);
+
     return 0;
 }
 
@@ -157,6 +161,12 @@ int mgcd(int a, int b) {
     return a;
 }
 
+// Функция НОД из лекции
+int NOD_rec(int n, int m) {
+    if (!(n & m)) return m;
+    else return NOD_rec(m, n % m);
+}
+
 // рекурсивные числа фиббоначи
 int fib(int n) {
     if (n <= 1)
@@ -165,8 +175,29 @@ int fib(int n) {
 }
 
 // вычисление суммы элементов массива
-double sum(double s[], int n) {
+int sum(int* s, int n) {
     if (n == 1) return s[0];
 
     return sum(s, n - 1) + s[n - 1];
+}
+
+int countDigits(int n) {
+    if (n < 10) return 1;            
+    return 1 + countDigits(n / 10);
+}
+
+
+
+
+
+
+// 06.10
+// Рекурсивное возведение в степень
+// Если степень нечётная, то вызываем функцию со степенью -1
+// Если степень чётная, то вызываем функцию со степенью /2
+double rec_degree(double x, int n) {
+    double r;
+    if (!n) return 1;
+    if (!(n % 2)) return r = rec_degree(x, n/2), r*r;
+    else return x * rec_degree(x, n - 1);
 }
