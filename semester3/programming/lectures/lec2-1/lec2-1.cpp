@@ -244,12 +244,8 @@ unsigned long fib(int n) {
 }
 
 double sum(double s[], int n) {
-    if (n == 1) {
-        cout << "n=" << n << "; sum=" << s[0] << endl;
-        return s[0];
-    }
+    if (n == 1) return s[0];
     double x = sum(s, n - 1);
-    cout << "n=" << n << "; sum=" << (x + s[n - 1]) << endl;
     return x + s[n - 1];
 }
 
