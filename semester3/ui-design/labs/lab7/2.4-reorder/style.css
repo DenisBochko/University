@@ -1,0 +1,34 @@
+body {
+  margin: 0;
+  padding: 15%;
+  display: grid;
+  place-content: stretch;
+  box-sizing: border-box;
+  min-height: 100vh;
+}
+
+.grid {
+  background: rgba(135, 207, 235, 0.1);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.grid-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ghostwhite;
+  border: 2px dotted skyblue;
+  font-size: 2.5rem;
+}
+
+
+/* Меняем местами первый и последний элементы с помощью order */
+.grid-cell:first-child {
+  order: 9;
+}
+
+.grid-cell:last-child {
+  order: -1;
+}

@@ -1,0 +1,37 @@
+body {
+  margin: 0;
+  padding: 15%;
+  display: grid;
+  place-content: stretch;
+  box-sizing: border-box;
+  min-height: 100vh;
+}
+
+.grid {
+  background: rgba(135, 207, 235, 0.1);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.grid-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ghostwhite;
+  border: 2px dotted skyblue;
+  font-size: 2.5rem;
+}
+
+
+/* Четвертый элемент отступает одну колонку и занимает 2 колонки */
+.grid-cell:nth-child(4) {
+  grid-column: 2 / span 2;
+}
+
+/* Альтернативный вариант без span:
+.grid-cell:nth-child(4) {
+  grid-column-start: 2; 
+  grid-column-end: 4;
+}
+*/
