@@ -1,0 +1,44 @@
+* { box-sizing: border-box; }
+:root { --bg: #0f172a; --card: #111827; --text: #e5e7eb; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.screen-center {
+  min-height: 100vh;
+
+  display: flex;               /* включаем flex на всю область */
+  justify-content: center;     /* по горизонтали */
+  align-items: center;         /* по вертикали */
+  padding: 24px;
+}
+
+.card {
+  width: min(600px, 100%);
+  background: var(--card);
+  border: 1px solid #1f2937;
+  border-radius: 16px;
+  padding: 28px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+}
+
+.card h1 { margin: 0 0 8px; font-size: 28px; }
+.card p { margin: 0 0 20px; line-height: 1.45; color: #cbd5e1; }
+
+.btn {
+  cursor: pointer;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: #2563eb;
+  color: white;
+  font-weight: 600;
+  transition: transform .05s ease, filter .15s ease;
+}
+.btn:hover { filter: brightness(1.05); }
+.btn:active { transform: translateY(1px); }

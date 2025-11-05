@@ -1,0 +1,32 @@
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: #f9fafb;
+  color: #111827;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px;
+
+  display: flex;
+  gap: 24px;           /* расстояние между колонками */
+  flex-wrap: wrap;     /* разрешаем перенос строк */
+}
+
+.col {
+  flex: 1 1 420px;     /* растёт, сжимается, базовая ширина ~420px */
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.04);
+}
+
+/* На узких экранах колонки становятся в одну */
+@media (max-width: 860px) {
+  .container { gap: 16px; }
+  .col { flex-basis: 100%; }
+}

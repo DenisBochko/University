@@ -1,0 +1,34 @@
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: #f6f7fb;
+}
+
+.nav {
+  padding: 24px;
+  background: #111827;
+}
+
+.nav__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: flex;                 /* включаем flex */
+  justify-content: center;       /* по центру по главной оси */
+  align-items: center;           /* выравнивание по поперечной оси */
+  gap: 24px;                     /* расстояние между пунктами */
+}
+
+.nav__item a {
+  color: #e5e7eb;
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: background .2s ease;
+}
+
+.nav__item a:hover {
+  background: #374151;
+}
