@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Тюрьма идей — Освободи свои концепты</title>
+  <meta name="description" content="Тюрьма идей — визуальный трекер для креативных людей. Посади идею в клетку, получи голоса и предложения, освободи её." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#06070a;                 /* базовый фон */
+      --panel:#0b0e14;              /* панель/карты */
+      --muted:#8b93a7;              /* вторичный текст */
+      --text:#e8ecf3;               /* основной текст */
+      --accent1:#5b8cff;            /* градиент 1 */
+      --accent2:#e24ecb;            /* градиент 2 */
+      --accent3:#5cf2c7;            /* акцент для успеха */
+      --warning:#ffd166;            /* акцент для ожидания */
+      --danger:#ff5f7a;             /* акцент для ошибки */
+      --glass:rgba(255,255,255,0.06);
+      --blur:14px;
+      --radius:18px;
+      --shadow:0 10px 30px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.03);
+    }
+
+    * { box-sizing:border-box }
+    html,body { height:100% }
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background: radial-gradient(1200px 800px at 10% 0%, #0c0f1a 0%, #06070a 40%, #06070a 100%),
+                  radial-gradient(1000px 600px at 90% 0%, #130c1a 0%, #06070a 50%, #06070a 100%);
+      overflow-x:hidden;
+    }
+
+    /* фоновые частицы */
+    .field { position:fixed; inset:0; pointer-events:none; z-index:0; }
+    .dot { position:absolute; width:2px; height:2px; border-radius:50%; background:rgba(255,255,255,0.35); filter:blur(0.3px); animation: float var(--d) linear infinite; opacity:0.65 }
+    @keyframes float { to { transform: translateY(100vh) translateX(var(--x, 0)); opacity:0 }}
+
+    /* шапка */
+    header{
+      position:sticky; top:0; z-index:50;
+      background:linear-gradient(to bottom, rgba(6,7,10,0.85), rgba(6,7,10,0));
+      backdrop-filter:saturate(1.2) blur(8px);
+      border-bottom:1px solid rgba(255,255,255,0.06);
+    }
+    .nav{ max-width:1200px; margin:0 auto; padding:16px 24px; display:flex; align-items:center; gap:16px; }
+    .brand{ display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:0.2px; }
+    .logo{ width:28px; height:28px; border-radius:8px; background: conic-gradient(from 120deg, var(--accent1), var(--accent2), var(--accent3), var(--accent1)); box-shadow:0 0 20px rgba(91,140,255,0.4); }
+    .nav a{ color:var(--muted); text-decoration:none; font-weight:600; font-size:14px; margin:0 10px; }
+    .nav a:hover{ color:var(--text) }
+    .cta{ margin-left:auto; }
+    .btn{
+      --bg: linear-gradient(135deg, var(--accent1), var(--accent2));
+      background: var(--bg);
+      border:none; color:white; padding:10px 16px; border-radius:12px; font-weight:700; cursor:pointer; box-shadow:0 8px 20px rgba(226,78,203,0.2);
+      transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
+    }
+    .btn:hover{ transform: translateY(-1px); filter:saturate(1.2); box-shadow:0 14px 30px rgba(91,140,255,0.25) }
+    .btn.ghost{ background:transparent; border:1px solid rgba(255,255,255,0.12); color:var(--text); box-shadow: none }
+    .btn.ghost:hover{ border-color:rgba(255,255,255,0.2) }
+
+    /* секция герой */
+    .hero{ position:relative; z-index:1; }
+    .wrap{ max-width:1200px; margin:0 auto; padding:80px 24px 40px; }
+    .grid{ display:grid; grid-template-columns:1.1fr 0.9fr; gap:32px; align-items:center; }
+
+    .title{
+      font-size: clamp(36px, 6vw, 60px);
+      line-height:1.05; margin:0 0 12px;
+      letter-spacing:-0.02em; font-weight:800;
+      background: linear-gradient(180deg, #fff, #c7d2fe 60%, #98a4c0);
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+      text-shadow: 0 0 40px rgba(91,140,255,0.15);
+    }
+    .subtitle{ color:var(--muted); font-size: clamp(16px, 2.2vw, 20px); max-width:58ch }
+
+    .actions{ display:flex; gap:12px; margin-top:22px }
+
+    .stats{ margin-top:28px; display:flex; gap:18px; color:#cdd3e3; font-size:14px }
+    .stat{ padding:10px 12px; border-radius:12px; background:var(--glass); backdrop-filter: blur(var(--blur)); border:1px solid rgba(255,255,255,0.08) }
+
+    /* иллюстрация: проигрыватель в клетке */
+    .scene{ position:relative; width:100%; aspect-ratio: 4 / 3; border-radius:24px; background: radial-gradient(140% 140% at 30% 10%, rgba(91,140,255,0.28), rgba(226,78,203,0.12) 28%, rgba(255,255,255,0.02) 50%, transparent 65%), linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.08); box-shadow: var(--shadow); overflow:hidden }
+    .floor{ position:absolute; inset:auto 0 0; height:36%; background:linear-gradient(180deg, rgba(12,16,24,0), rgba(12,16,24,0.85)); border-top:1px solid rgba(255,255,255,0.04) }
+
+    .cage{ position:absolute; left:50%; top:44%; transform: translate(-50%, -50%); width:min(72%, 520px); height:auto; filter: drop-shadow(0 30px 40px rgba(0,0,0,0.45)); }
+    .cage svg{ width:100%; height:auto; display:block }
+
+    .pulse{ position:absolute; left:50%; top:50%; width:260px; height:260px; transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(circle, rgba(91,140,255,0.25), rgba(91,140,255,0) 60%); animation: pulse 2.6s ease-in-out infinite; opacity:0.8 }
+    @keyframes pulse { 50% { transform:translate(-50%,-50%) scale(1.06); opacity:0.95 } }
+
+    /* секция: как это работает */
+    section{ position:relative; z-index:1 }
+    .section{ max-width:1200px; margin:0 auto; padding:80px 24px }
+    .h2{ font-size: clamp(28px, 4vw, 40px); margin:0 0 14px; font-weight:800 }
+    .lead{ color:var(--muted); max-width:70ch }
+
+    .features{ display:grid; grid-template-columns: repeat(3, 1fr); gap:18px; margin-top:28px }
+    .card{ background:var(--panel); border:1px solid rgba(255,255,255,0.07); padding:18px; border-radius:16px; box-shadow: var(--shadow); position:relative; overflow:hidden }
+    .card:before{ content:""; position:absolute; inset:-1px; background: radial-gradient(600px 280px at 0% 0%, rgba(91,140,255,0.12), transparent 40%), radial-gradient(500px 240px at 100% 0%, rgba(226,78,203,0.1), transparent 40%); opacity:0.7; pointer-events:none }
+    .card h3{ margin:6px 0 6px; font-size:18px }
+    .card p{ color:var(--muted); font-size:14px; line-height:1.55 }
+
+    .step{ display:flex; align-items:flex-start; gap:12px }
+    .step .num{ width:30px; height:30px; display:grid; place-items:center; font-weight:800; border-radius:10px; background:linear-gradient(135deg, var(--accent1), var(--accent2)); box-shadow:0 6px 18px rgba(226,78,203,0.22) }
+
+    /* галерея идей */
+    .gallery{ display:grid; grid-template-columns: repeat(12, 1fr); gap:16px; margin-top:28px }
+    .idea{ grid-column: span 4; background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); border:1px solid rgba(255,255,255,0.08); border-radius:16px; padding:14px; box-shadow: var(--shadow); position:relative; overflow:hidden; transition: transform .25s ease }
+    .idea:hover{ transform: translateY(-2px) }
+    .idea .thumb{ aspect-ratio: 16 / 10; border-radius:12px; background:#0e121a; display:grid; place-items:center; border:1px solid rgba(255,255,255,0.06); position:relative; overflow:hidden }
+    .idea .thumb svg{ width:58%; opacity:0.9 }
+    .idea h4{ margin:12px 0 6px; font-size:16px }
+    .idea p{ margin:0; color:var(--muted); font-size:13px }
+
+    .lock-badge{ position:absolute; top:12px; left:12px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.12); padding:6px 10px; border-radius:999px; font-size:12px }
+    .vote{ margin-top:10px; display:flex; align-items:center; gap:10px }
+    .chip{ padding:6px 10px; border-radius:10px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.08); font-size:12px; color:#dce3f5 }
+    .unlock{ margin-left:auto }
+
+    /* форма */
+    .form{ display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-top:22px }
+    .input{ background:var(--glass); border:1px solid rgba(255,255,255,0.12); color:var(--text); padding:12px 14px; border-radius:12px; outline:none; width:100%; font:inherit }
+    .input::placeholder{ color:#9aa3ba }
+    .textarea{ grid-column: 1 / -1; min-height:110px; resize: vertical }
+
+    /* футер */
+    footer{ border-top:1px solid rgba(255,255,255,0.08); background:rgba(0,0,0,0.3); margin-top:40px }
+    .foot{ max-width:1200px; margin:0 auto; padding:28px 24px; color:#b9c1d9; display:flex; gap:14px; align-items:center; justify-content:space-between }
+    .foot small{ color:#96a0b9 }
+
+    /* адаптив */
+    @media (max-width: 980px){
+      .grid{ grid-template-columns:1fr; gap:14px }
+      .features{ grid-template-columns:1fr; }
+      .gallery{ grid-template-columns:1fr 1fr; }
+      .idea{ grid-column: span 1; }
+      .form{ grid-template-columns:1fr; }
+    }
+
+    /* доступность по движению */
+    @media (prefers-reduced-motion: reduce){
+      .pulse, .dot { animation: none !important }
+    }
+  
+    /* СВЕТЛАЯ ТЕМА */
+    body.theme-light{
+      color: var(--text);
+      background: radial-gradient(1200px 800px at 10% 0%, #ffffff 0%, #f6f7fb 45%, #f6f7fb 100%),
+                  radial-gradient(1000px 600px at 90% 0%, #ffffff 0%, #f6f7fb 60%, #f6f7fb 100%);
+    }
+    .theme-light{
+      --bg:#f6f7fb;
+      --panel:#ffffff;
+      --muted:#5a6378;
+      --text:#0b0f1a;
+      --glass:rgba(0,0,0,0.04);
+      --shadow:0 10px 28px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.6);
+    }
+    .theme-light .dot{ background:rgba(0,0,0,0.35) }
+    .theme-light header{ background:linear-gradient(to bottom, rgba(255,255,255,0.85), rgba(255,255,255,0)); border-bottom:1px solid rgba(0,0,0,0.06) }
+    .theme-light .nav a{ color:#5a6378 }
+    .theme-light .scene{ background: radial-gradient(140% 140% at 30% 10%, rgba(91,140,255,0.18), rgba(226,78,203,0.10) 28%, rgba(0,0,0,0.02) 50%, transparent 65%), linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0)); border-color: rgba(0,0,0,0.08) }
+    .theme-light .floor{ background:linear-gradient(180deg, rgba(240,242,248,0), rgba(240,242,248,0.85)); border-top:1px solid rgba(0,0,0,0.06) }
+    .theme-light .card, .theme-light .idea, .theme-light .scene, .theme-light .input, .theme-light .stat, .theme-light .lock-badge{ border-color: rgba(0,0,0,0.12) }
+    .theme-light .idea .thumb{ background:#f3f5fa; border-color: rgba(0,0,0,0.08) }
+    .theme-light .chip{ background:rgba(0,0,0,0.06); border-color:rgba(0,0,0,0.08); color:#213047 }
+    .theme-light .btn.ghost{ border-color:rgba(0,0,0,0.12); color:#0b0f1a }
+    .theme-light footer{ border-top:1px solid rgba(0,0,0,0.08); background:rgba(255,255,255,0.6) }
+  </style>
+</head>
+<body class="theme-light">
+  <!-- фоновые частицы -->
+  <div class="field" aria-hidden="true" id="field"></div>
+
+  <header>
+    <nav class="nav">
+      <div class="brand" aria-label="Тюрьма идей">
+        <div class="logo" role="img" aria-hidden="true"></div>
+        <span>Тюрьма идей</span>
+      </div>
+      <a href="#how">Как это работает</a>
+      <a href="#ideas">Идеи</a>
+      <a href="#submit">Добавить идею</a>
+      <div class="cta">
+        <button class="btn ghost" id="themeToggle" aria-label="Переключить тему">Тёмная тема</button>
+        <button class="btn" id="openDemo">Демо</button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero wrap">
+      <div class="grid">
+        <div>
+          <h1 class="title">Освободи идеи,
+            которые <span style="white-space:nowrap">боишься выпускать</span></h1>
+          <p class="subtitle">Визуальный трекер для креативных людей: посади идею в клетку, собери голоса и предложения по развитию, открой замок и доведи её до релиза.</p>
+          <div class="actions">
+            <button class="btn" onclick="document.getElementById('submit').scrollIntoView({behavior:'smooth'})">Посадить идею</button>
+            <button class="btn ghost" onclick="document.getElementById('ideas').scrollIntoView({behavior:'smooth'})">Посмотреть клетки</button>
+          </div>
+          <div class="stats">
+            <div class="stat">🔒 Идей под замком: <strong id="stat-locked">27</strong></div>
+            <div class="stat">🔓 Освобождено: <strong id="stat-free">9</strong></div>
+            <div class="stat">🔥 Голосов сегодня: <strong id="stat-votes">312</strong></div>
+          </div>
+        </div>
+        <div>
+          <div class="scene" role="img" aria-label="Музыкальный проигрыватель в клетке на столе">
+            <div class="pulse"></div>
+            <div class="cage">
+              <!-- SVG композиция клетки и проигрывателя -->
+              <svg viewBox="0 0 560 380" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#5b8cff" />
+                    <stop offset="50%" stop-color="#e24ecb" />
+                    <stop offset="100%" stop-color="#5cf2c7" />
+                  </linearGradient>
+                  <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="8" />
+                  </filter>
+                </defs>
+                <!-- стол -->
+                <rect x="0" y="310" width="560" height="20" fill="#0a0a0a" opacity="0.6" />
+                <rect x="0" y="330" width="560" height="50" fill="#0f0f0f" />
+                <!-- клетка -->
+                <rect x="120" y="40" width="320" height="260" rx="18" fill="#0b0b0b" stroke="url(#g1)" stroke-width="2" />
+                <rect x="120" y="60" width="320" height="4" fill="url(#g1)" opacity="0.9" />
+                <!-- вертикальные прутья -->
+                <g opacity="0.8">
+                  <rect x="140" y="40" width="4" height="260" fill="url(#g1)" />
+                  <rect x="176" y="40" width="4" height="260" fill="url(#g1)" />
+                  <rect x="212" y="40" width="4" height="260" fill="url(#g1)" />
+                  <rect x="248" y="40" width="4" height="260" fill="url(#g1)" />
+                  <rect x="284" y="40" width="4" height="260" fill="url(#g1)" />
+                  <rect x="320" y="40" width="4" height="260" fill="url(#g1)" />
+                  <rect x="356" y="40" width="4" height="260" fill="url(#g1)" />
+                  <rect x="392" y="40" width="4" height="260" fill="url(#g1)" />
+                </g>
+                <!-- проигрыватель -->
+                <g>
+                  <rect x="170" y="210" width="220" height="56" rx="8" fill="#111318" stroke="#262a33" />
+                  <circle cx="230" cy="190" r="48" fill="#0f1116" stroke="#3b3f4a" stroke-width="2" />
+                  <circle cx="230" cy="190" r="8" fill="#1f2230" />
+                  <rect x="300" y="150" width="10" height="100" rx="3" fill="#2a2f3a" />
+                  <circle cx="305" cy="150" r="14" fill="#141821" stroke="#2f3440" />
+                  <rect x="196" y="230" width="40" height="8" rx="2" fill="#222736" />
+                  <rect x="246" y="230" width="40" height="8" rx="2" fill="#222736" />
+                  <rect x="296" y="230" width="40" height="8" rx="2" fill="#222736" />
+                </g>
+                <!-- подсветка -->
+                <ellipse cx="280" cy="305" rx="110" ry="14" fill="#000" opacity="0.55" filter="url(#soft)" />
+              </svg>
+            </div>
+            <div class="floor"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how" class="section">
+      <h2 class="h2">Как это работает</h2>
+      <p class="lead">Три шага. Никакой теории ненависти к себе, только практические ограничения и их преодоление.</p>
+      <div class="features">
+        <div class="card step">
+          <div class="num">1</div>
+          <div>
+            <h3>Посади идею</h3>
+            <p>Короткий пич + эскиз. Клетка создаётся автоматически, идея получает уникальный замок и видимость в галерее.</p>
+          </div>
+        </div>
+        <div class="card step">
+          <div class="num">2</div>
+          <div>
+            <h3>Собери ключи</h3>
+            <p>Голоса и предложения по развитию превращаются в «ключи». Больше ключей — слабее замок.</p>
+          </div>
+        </div>
+        <div class="card step">
+          <div class="num">3</div>
+          <div>
+            <h3>Открой замок</h3>
+            <p>Когда ключей достаточно, клетка распахивается. Идея переезжает в статус «свободна» и получает страницу прогресса.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section id="ideas" class="section">
+      <h2 class="h2">Клетки с идеями</h2>
+      <p class="lead">Выбери любую, добавь голос или предложение. Может, именно твой комментарий станет последним ключом.</p>
+      <div class="gallery" id="gallery"></div>
+    </section>
+
+    <!-- SUBMIT -->
+    <section id="submit" class="section">
+      <h2 class="h2">Посадить новую идею</h2>
+      <p class="lead">Опиши коротко суть и прикрепи эскиз/ссылку на картинку. Мы создадим клетку с замком и счётчиками.</p>
+      <form class="form" id="ideaForm">
+        <input class="input" name="title" placeholder="Название идеи" required aria-label="Название идеи" />
+        <input class="input" name="image" placeholder="Ссылка на эскиз (опционально)" aria-label="Ссылка на эскиз" />
+        <textarea class="input textarea" name="desc" placeholder="Описание в двух-трёх предложениях" required aria-label="Описание"></textarea>
+        <button class="btn" type="submit">Посадить в клетку</button>
+        <button class="btn ghost" type="reset">Сбросить</button>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <div class="foot">
+      <div class="brand"><div class="logo"></div><strong>Тюрьма идей</strong></div>
+      <small>© 2025. Этот лендинг — концепт. Все совпадения с чужими ограничениями случайны.</small>
+    </div>
+  </footer>
+
+  <script>
+    // ТЕМА: светлая по умолчанию, переключатель сохраняет выбор
+    const themeBtnInit = () => {
+      const themeBtn = document.getElementById('themeToggle');
+      function applyTheme(mode){
+        if(mode === 'light') document.body.classList.add('theme-light');
+        else document.body.classList.remove('theme-light');
+        localStorage.setItem('theme', mode);
+        if(themeBtn) themeBtn.textContent = mode === 'light' ? 'Тёмная тема' : 'Светлая тема';
+      }
+      const saved = localStorage.getItem('theme') || 'light';
+      applyTheme(saved);
+      if(themeBtn){
+        themeBtn.addEventListener('click', ()=>{
+          const next = document.body.classList.contains('theme-light') ? 'dark' : 'light';
+          applyTheme(next);
+        });
+      }
+    };
+    document.addEventListener('DOMContentLoaded', themeBtnInit);
+
+    // фоновые точки-«пыль»
+    const field = document.getElementById('field');
+    for (let i = 0; i < 140; i++) {
+      const d = document.createElement('div');
+      d.className = 'dot';
+      d.style.left = Math.random()*100 + 'vw';
+      d.style.top = (Math.random()*-100) + 'vh';
+      d.style.setProperty('--d', 6 + Math.random()*16 + 's');
+      d.style.setProperty('--x', (Math.random()*60 - 30) + 'px');
+      field.appendChild(d);
+    }
+
+    // демо-данные идей
+    const demoIdeas = [
+      { title: 'Ночной фотозин без камер', desc: 'Фотозин, собранный из описаний снов. Иллюстрации сгенерированы после текста, а не наоборот.', locked:true, votes: 128 },
+      { title: 'Музыка для пустых станций', desc: 'Мини-альбом из полевых записей холлов метро, сыгранный на колонках этих же станций.', locked:true, votes: 259 },
+      { title: 'Карта чужих заметок', desc: 'Интерактивная карта города, где видны забытые листки, наклейки, мелкие объявления.', locked:false, votes: 402 },
+      { title: 'Почтовый театр', desc: 'Пьеса, которую зрители получают по частям в письмах. Концовка меняется от ответов.', locked:true, votes: 87 },
+      { title: 'Тихая вечеринка для одного', desc: 'Плейлист и визуал для одиночной вечеринки. Выходит только в дождливые дни.', locked:true, votes: 173 },
+      { title: 'Галерея сломанных устройств', desc: 'Выставка нерабочих гаджетов, где аудиогиды озвучены их «голосами».', locked:false, votes: 221 }
+    ];
+
+    const gallery = document.getElementById('gallery');
+
+    function cageSVG(tint = '#5b8cff'){
+      return `
+      <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="gg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#5b8cff"/>
+            <stop offset="60%" stop-color="#e24ecb"/>
+            <stop offset="100%" stop-color="#5cf2c7"/>
+          </linearGradient>
+        </defs>
+        <rect x="40" y="20" width="240" height="140" rx="14" fill="#0f121a" stroke="url(#gg)" />
+        <rect x="40" y="36" width="240" height="3" fill="url(#gg)" />
+        ${[...Array(6)].map((_,i)=>`<rect x="${60+i*32}" y="20" width="3" height="140" fill="url(#gg)" opacity="0.85" />`).join('')}
+        <g>
+          <rect x="90" y="120" width="140" height="34" rx="6" fill="#121621" stroke="#262a33" />
+          <circle cx="130" cy="104" r="28" fill="#0f1116" stroke="#3b3f4a" stroke-width="1.6" />
+          <circle cx="130" cy="104" r="5" fill="#1f2230" />
+          <rect x="168" y="84" width="8" height="60" rx="2" fill="#2a2f3a" />
+          <circle cx="172" cy="84" r="10" fill="#141821" stroke="#2f3440" />
+        </g>
+      </svg>`
+    }
+
+    function renderIdeas(){
+      gallery.innerHTML = '';
+      demoIdeas.forEach((it, idx)=>{
+        const card = document.createElement('article');
+        card.className = 'idea';
+        card.innerHTML = `
+          <div class="thumb">${cageSVG()}<div class="lock-badge">${it.locked ? '🔒 Под замком' : '🔓 Свободна'}</div></div>
+          <h4>${it.title}</h4>
+          <p>${it.desc}</p>
+          <div class="vote">
+            <span class="chip">Голоса: <strong>${it.votes}</strong></span>
+            <button class="btn ghost unlock" data-idx="${idx}">${it.locked ? 'Добавить ключ' : 'Пожать руку'}</button>
+          </div>
+        `;
+        gallery.appendChild(card);
+      })
+    }
+
+    renderIdeas();
+
+    // простая логика голосов/ключей
+    gallery.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button[data-idx]');
+      if(!btn) return;
+      const idx = +btn.dataset.idx;
+      const idea = demoIdeas[idx];
+      idea.votes += Math.floor(1 + Math.random()*6);
+      if(idea.locked && idea.votes > 240 + Math.random()*120){
+        idea.locked = false; // замок открыт
+      }
+      renderIdeas();
+      bounceStats();
+    });
+
+    // форма добавления идеи
+    const form = document.getElementById('ideaForm');
+    form.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const fd = new FormData(form);
+      const title = (fd.get('title')||'').toString().trim();
+      const desc = (fd.get('desc')||'').toString().trim();
+      const image = (fd.get('image')||'').toString().trim();
+      demoIdeas.unshift({ title, desc, locked:true, votes: 0, image });
+      renderIdeas();
+      form.reset();
+      window.scrollTo({ top: document.getElementById('ideas').offsetTop - 20, behavior:'smooth' });
+      flash('Идея посажена. Соберите ключи, чтобы открыть замок.');
+      bounceStats();
+    });
+
+    // всплывающая плашка
+    function flash(text){
+      const n = document.createElement('div');
+      n.textContent = text;
+      Object.assign(n.style, {
+        position:'fixed', left:'50%', top:'18px', transform:'translateX(-50%)',
+        background:'linear-gradient(135deg, rgba(91,140,255,0.2), rgba(226,78,203,0.2))',
+        border:'1px solid rgba(255,255,255,0.25)', color:'#fff', padding:'10px 14px', borderRadius:'12px', zIndex:1000,
+        backdropFilter:'blur(10px)', boxShadow:'0 12px 30px rgba(0,0,0,0.35)'
+      });
+      document.body.appendChild(n);
+      setTimeout(()=> n.remove(), 2200);
+    }
+
+    // статистика
+    function bounceStats(){
+      const locked = demoIdeas.filter(i=>i.locked).length;
+      const free = demoIdeas.length - locked;
+      const votes = demoIdeas.reduce((a,b)=>a+b.votes,0);
+      document.getElementById('stat-locked').textContent = locked;
+      document.getElementById('stat-free').textContent = free;
+      document.getElementById('stat-votes').textContent = votes;
+      ;['stat-locked','stat-free','stat-votes'].forEach(id=>{
+        const el = document.getElementById(id);
+        el.style.transition='transform .25s cubic-bezier(.2,1.2,.2,1)';
+        el.style.transform='scale(1.12)';
+        setTimeout(()=> el.style.transform='scale(1)', 180);
+      })
+    }
+    bounceStats();
+
+    // лёгкий параллакс героя
+    const scene = document.querySelector('.scene');
+    scene.addEventListener('mousemove', (e)=>{
+      const r = scene.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - .5;
+      const y = (e.clientY - r.top) / r.height - .5;
+      scene.style.transform = `perspective(900px) rotateX(${y*-4}deg) rotateY(${x*6}deg)`;
+    });
+    scene.addEventListener('mouseleave', ()=>{
+      scene.style.transform = 'none';
+    });
+
+    // демо-кнопка: рандомно открываем одну клетку
+    document.getElementById('openDemo').addEventListener('click', ()=>{
+      const locked = demoIdeas.map((it,i)=>({it,i})).filter(({it})=>it.locked);
+      if(!locked.length){ flash('Все клетки уже открыты. Повезло.'); return }
+      const pick = locked[Math.floor(Math.random()*locked.length)];
+      pick.it.locked = false; pick.it.votes += 50 + Math.floor(Math.random()*200);
+      renderIdeas();
+      flash('Клетка открылась! Идея перешла в статус «Свободна».');
+      bounceStats();
+    });
+  </script>
+</body>
+</html>
