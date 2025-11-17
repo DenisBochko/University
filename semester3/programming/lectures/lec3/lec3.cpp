@@ -309,17 +309,23 @@ void Shaker(int k, int* x) {
         for (i = n2; i > n1; i--) {
             c++;
             if (x[i - 1] > x[i]) {
-                p++; j = i;
-                t = x[i - 1]; x[i - 1] = x[i]; x[i] = t;
+                p++; 
+                
+                j = i;
+                t = x[i - 1]; 
+                x[i - 1] = x[i]; 
+                x[i] = t;
             }
         } n1 = j;
         for (i = n1 + 1; i <= n2; i++) {
             c++;
             if (x[i - 1] > x[i]) {
+                p++; 
+
+                j = i; 
                 t = x[i - 1];
                 x[i - 1] = x[i];
                 x[i] = t;
-                j = i; p++;
             }
         }
         n2 = j - 1;
