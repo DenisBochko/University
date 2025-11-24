@@ -1,12 +1,13 @@
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 using namespace std;
 
-/* Алгоритмы сортировки */
+/* прототипы как у тебя */
 
 void BubbleSort(int* arr, int n);
 void bubble(int* arr, int k);
 void BubbleSort_New(int* x, int k);
-// void SelectionSort(int* arr, int n);
 void reverse_bubble_sort(int* arr, int n);
 
 void InsertSort(int k, int* x);
@@ -20,30 +21,65 @@ void Copy(int k, int* x, int* y);
 void Print(int k, int* x);
 
 int main() {
-    int i, Size = 500, a[1000], b[1000];
+    int i, Size = 20;
+    int a[40], b[40];
+
     srand(time(NULL));
+
     for (i = 0; i < 5; i++) {
-        cout << " " << i + 1 << endl;
+        cout << "\n================ СЕРИЯ " << i + 1 << " ================\n";
+
+        // генерим исходный массив
         Enter_array(Size, a);
-        Copy(Size, b, a);
+        Copy(Size, b, a);   // b = исходный массив
+
+        cout << "Исходный массив:\n";
+        Print(Size, b);
+        cout << "\n\n";
+
+        Copy(Size, a, b);
+        cout << "Shaker sort:\n";
+        Shaker(Size, a);        // внутри уже Print + статистика
+        cout << "\n";
+
+        Copy(Size, a, b);
+        cout << "BubbleSort (классический):\n";
+        BubbleSort(a, Size);
         Print(Size, a);
-        Shaker(Size, a);
+        cout << "\n\n";
 
-        // Copy(Size, a, b);
-        // Print(Size, a);
-        // BubbleSort_New(a, Size);
-        
-        // Copy(Size, a, b);
-        // Print(Size, a);
-        // BubbleSort_New(a, Size);
+        Copy(Size, a, b);
+        cout << "reverse_bubble_sort:\n";
+        reverse_bubble_sort(a, Size);
+        Print(Size, a);
+        cout << "\n\n";
 
-        // Copy(Size, a, b);
-        // Print(Size, a);
-        // BubbleSort_New(a, Size);
+        Copy(Size, a, b);
+        cout << "bubble (лабораторная версия):\n";
+        bubble(a, Size);        // выводит c и p
+        Print(Size, a);
+        cout << "\n\n";
 
-        // Copy(Size, a, b);
-        // Print(Size, a);
-        // BubbleSort_New(a, Size);
+        Copy(Size, a, b);
+        cout << "BubbleSort_New:\n";
+        BubbleSort_New(a, Size); // выводит c и p
+        Print(Size, a);
+        cout << "\n\n";
+
+        Copy(Size, a, b);
+        cout << "Shell sort:\n";
+        Shella(Size, a);        // внутри Print + статистика
+        cout << "\n";
+
+        Copy(Size, a, b);
+        cout << "InsertSort:\n";
+        InsertSort(Size, a);    // внутри Print + статистика
+        cout << "\n";
+
+        Copy(Size, a, b);
+        cout << "SelectionSort:\n";
+        SelectionSort(Size, a); // внутри Print + статистика
+        cout << "\n";
     }
 
     return 0;
@@ -75,20 +111,6 @@ void reverse_bubble_sort(int* arr, int n) {
     }
 }
 
-// void SelectionSort(int* arr, int n) {
-//     for (int i = 0; i < n; i++) {
-//         int mn_idx = i;
-
-//         for (int j = i; j < n; j++) {
-//             if (arr[j] < arr[mn_idx]) mn_idx = j;
-//         } 
-
-//         int b = arr[i];
-//         arr[i] = arr[mn_idx];
-//         arr[mn_idx] = b;
-//     }
-// }
-
 
 // На Лабораторной делали.
 void bubble(int* x, int k) {
@@ -105,38 +127,6 @@ void bubble(int* x, int k) {
         }
     printf("c = %d; p = %d; \n", c, p);
 }
-
-/*
-2 6 7 0 9 1 5 3
-            3 5
-        1 9
-    0 7
-  0 6
-0 2
-
-0 2 6 7 1 9 3 5       
-          3 9
-      1 7
-    1 6
-  1 2
-
-0 1 2 6 7 3 9 5
-            5 9
-        3 7
-      3 6
-
-0 1 2 3 6 7 5 9
-          5 7
-        5 6
-
-0 1 2 3 5 6 7 9
-
-0 1 2 3 5 6 7 9
-
-0 1 2 3 5 6 7 9
-
-0 1 2 3 5 6 7 9
-*/
 
 void BubbleSort_New(int* x, int k) {
     int i = 0, j, m = 0, c = 0, p = 0, buf;
@@ -155,38 +145,6 @@ void BubbleSort_New(int* x, int k) {
     } while (i - m);
     printf("c = %d; p = %d; \n", c, p);
 }
-/*
-2 6 7 0 9 1 5 3
-            3 5
-        1 9
-    0 7
-  0 6
-0 2
-
-m = 0
-0 2 6 7 1 9 3 5
-          3 9
-      1 7
-    1 6
-  1 2
-
-m = 1
-0 1 2 6 7 3 9 5
-            5 9
-          3 5
-        3 7
-      3 6
-    2 3
-
-m = 2
-0 1 2 3 6 7 5 9
-          5 7
-        5 6
-      3 5
-
-m = 3
-0 1 2 3 5 6 7 9
-*/
 
 void Enter_array(int k, int* x) {
     int i;
@@ -203,43 +161,6 @@ void Print(int k, int* x) {
         cout << x[i] << " ";
     }
 }
-
-// Evoid Shaker (int k, int* x) {
-// int i, t, n1 = 0, n2 = k - 1, ], c = 0, P = 0;
-// do 1 for (i = n2; i › n1; i~~) {
-// c+*;
-// if (x[i - 1] › x[i]) {
-// p**; j = 1;
-// t = x[i - 1]: x[i - 1] = x[1]; x[i] = t;
-// } n1 = 2:
-// for (i = n1 + 1; i <= n2; i++) {
-// C++;
-// if (x[1 - 1] › x[1]) t
-// t = x[1 - 1]:
-// x[i - 1] = x[i];
-// ×[1] = t;
-// j = i; ptt;
-// n2
-// g
-// ]
-// - 1;
-
-// void InsertSort(int k, int* x) {
-//     int i, j, temp, c = 0, p = 0;
-//     for (i = 1; i < k; i++) {
-//         c++;
-//         if (x[i-1] > x[i]) {
-//             temp = x[1]; p++; //поиск места элемента
-//             for (j = 1 - 1; j >= 0 && x[j] > temp; j--, c+=2) {
-//                 p++;
-//                 x[j + 1] = x[j];
-//             } //сдвигаем эл. вправо, пока не дошли до места вст-ки элем-та
-//             x[j + 1] = temp; p++;
-//         }
-//     }
-//     Print(k, x);
-//     printf("InsertSort: compar=%d, reshuffle=%d\n\n", c, p / 3);
-// }
 
 void Shella(int size, int* a) {
     int i, j, temp, step = size / 2, c = 0, p = 0;
@@ -263,8 +184,6 @@ void Shella(int size, int* a) {
     Print(size, a);
     printf("SortShella: compar=%d, reshuffle=%d\n\n", c, p / 3);
 }
-
-// кинула Света
 
 void InsertSort(int k, int* x) {
     int i, j, temp, c = 0, p = 0;
