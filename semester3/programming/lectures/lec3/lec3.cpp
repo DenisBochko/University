@@ -21,7 +21,7 @@ void Copy(int k, int* x, int* y);
 void Print(int k, int* x);
 
 int main() {
-    int i, Size = 20;
+    int i, Size = 16;
     int a[40], b[40];
 
     srand(time(NULL));
@@ -41,18 +41,6 @@ int main() {
         cout << "Shaker sort:\n";
         Shaker(Size, a);        // внутри уже Print + статистика
         cout << "\n";
-
-        Copy(Size, a, b);
-        cout << "BubbleSort (классический):\n";
-        BubbleSort(a, Size);
-        Print(Size, a);
-        cout << "\n\n";
-
-        Copy(Size, a, b);
-        cout << "reverse_bubble_sort:\n";
-        reverse_bubble_sort(a, Size);
-        Print(Size, a);
-        cout << "\n\n";
 
         Copy(Size, a, b);
         cout << "bubble (лабораторная версия):\n";
