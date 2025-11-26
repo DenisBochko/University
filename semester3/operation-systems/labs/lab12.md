@@ -1,292 +1,179 @@
 # Лабораторная работа №12
 
-1 Пакетный файл для обновления архива (update_archive.bat)
-
-```cmd
-@echo off
-REM Выбор архиватора
-echo Выбор архиватора:
-echo 1 - WinRAR
-echo 2 - 7-Zip
-echo 3 - WinZIP
-
-set /p choice="Выберите архиватор (1-3): "
-
-REM Имя архива передано первым параметром
-set archive_name=%1
-
-if "%choice%"=="1" (
-    REM Обновление архива через WinRAR (u = update)
-    "C:\Program Files\WinRAR\WinRAR.exe" u "%archive_name%"
-) else if "%choice%"=="2" (
-    REM 7-Zip: режим u также обновляет
-    "C:\Program Files\7-Zip\7z.exe" u "%archive_name%"
-) else if "%choice%"=="3" (
-    REM WinZIP
-    "C:\Program Files\WinZIP\WZIP32.EXE" -u "%archive_name%"
-) else (
-    echo Неверный выбор
-)
-```
-
-2 Пакетный файл для очистки подкаталога (clean_subdir.bat)
-
-```cmd
-@echo off
-REM Подтверждение удаления файлов
-set /p confirm="Вы уверены, что хотите очистить подкаталог? (y/n): "
-
-if "%confirm%"=="y" (
-    REM Удаление всех файлов в текущем каталоге
-    del /Q *.*
-    echo Подкаталог очищен
-) else (
-    echo Операция отменена
-)
-```
-
-3 Пакетный файл для проверки на вирусы (antivirus_check.bat)
-
-```cmd
-@echo off
-REM Выбор диска для антивирусной проверки
-echo Выбор диска:
-echo 1 - C:
-echo 2 - D:
-echo 3 - E:
-
-set /p drive="Выберите диск (1-3): "
-
-REM Путь к антивирусу передаётся параметром %1
-set antivirus=%1
-
-if "%drive%"=="1" (
-    %antivirus% C:\
-) else if "%drive%"=="2" (
-    %antivirus% D:\
-) else if "%drive%"=="3" (
-    %antivirus% E:\
-) else (
-    echo Неверный выбор
-)
-```
-
-4 Пакетный файл для выбора редактора (editor_choice.bat)
-
-```cmd
-@echo off
-REM Имя файла передаётся параметром %1
-set filename=%1
-
-echo Выбор редактора:
-echo 1 - Notepad
-echo 2 - Notepad++
-echo 3 - VS Code
-set /p editor="Выберите редактор (1-3): "
-
-if "%editor%"=="1" (
-    REM Открытие в стандартном Notepad
-    notepad "%filename%"
-) else if "%editor%"=="2" (
-    REM Notepad++
-    "C:\Program Files\Notepad++\notepad++.exe" "%filename%"
-) else if "%editor%"=="3" (
-    REM Visual Studio Code
-    code "%filename%"
-) else (
-    echo Неверный выбор
-)
-```
-
 5 Пакетный файл для архивации каталогов (archive_folders.bat)
 
 ```cmd
-@echo off
-REM %1 - каталог, %2 - архиватор (например 7z.exe)
-set target_dir=%1
-set archiver=%2
+@ECHO OFF
+SETLOCAL ENABLEDELAYEDEXPANSION
 
-REM Перебор всех подпапок
-for /d %%i in ("%target_dir%\*") do (
-    echo Архивация каталога %%i
+REM ================== Общие сведения о пакетном файле ==================
+SET "SCRIPT_NAME=%~nx0"
+SET "SCRIPT_AUTHOR=Бочко Денис Андреевич>"
+SET "SCRIPT_DESC=Архивация файлов по каталогам и удаление архивов"
+SET "SCRIPT_USAGE=%SCRIPT_NAME% <путь_к_каталогу> <путь_к_архиватору>"
 
-    REM Создание архива
-    %archiver% a "%%i.zip" "%%i\*"
+REM ================== Вывод справки ==================
+:USAGE
+ECHO Имя:        %SCRIPT_NAME%
+ECHO Назначение: %SCRIPT_DESC%
+ECHO Применение: Архивирование файлов в каждом каталоге по отдельности
+ECHO             и удаление созданных архивов (ZIP).
+ECHO Автор:      %SCRIPT_AUTHOR%
+ECHO.
+ECHO Использование:
+ECHO   %SCRIPT_USAGE%
+ECHO.
+ECHO Параметры:
+ECHO   путь_к_каталогу   - корневой каталог, в котором обрабатываются все
+ECHO                       подкаталоги.
+ECHO   путь_к_архиватору - полный путь к консольному архиватору (например, 7z.exe).
+ECHO.
+ECHO Примеры:
+ECHO   %SCRIPT_NAME% "D:\Data" "C:\Tools\7z.exe"
+ECHO.
+ECHO При запуске без параметров или с ключом /? выводится эта справка.
+ECHO В процессе работы запросы с клавиатуры принимают ТОЛЬКО числовой ввод.
+GOTO :END
 
-    REM Удаление ZIP внутри папок (если было)
-    del "%%i\*.zip" 2>nul
+REM ================== Точка входа ==================
+:START
+IF "%~1"=="" GOTO :USAGE
+IF /I "%~1"=="/?" GOTO :USAGE
+
+REM Контроль верности командной строки (ровно два параметра)
+IF "%~3" NEQ "" (
+    ECHO [ОШИБКА] Неверное количество параметров.
+    ECHO Ожидалось: %SCRIPT_USAGE%
+    GOTO :END
 )
-```
 
-6 Пакетный файл для создания студенческих каталогов (create_student_dirs.bat)
+SET "ROOT_DIR=%~1"
+SET "ARCHIVER=%~2"
 
-```cmd
-@echo off
-REM %1 - список курсов, %2 - список групп
-set courses=%1
-set groups=%2
+REM Проверка существования каталога
+IF NOT EXIST "%ROOT_DIR%\NUL" (
+    ECHO [ОШИБКА] Каталог "%ROOT_DIR%" не существует.
+    GOTO :END
+)
 
-set /p max_students="Введите максимальное число студентов в группе: "
+REM Проверка существования архиватора
+IF NOT EXIST "%ARCHIVER%" (
+    ECHO [ОШИБКА] Архиватор "%ARCHIVER%" не найден.
+    GOTO :END
+)
 
-for %%c in (%courses%) do (
-    for %%g in (%groups%) do (
-        REM Создание каталога группы
-        md "Kurs%%c\Group%%g" 2>nul
+REM Сохранение текущего каталога, чтобы не менять его снаружи
+SET "OLD_DIR=%CD%"
 
-        REM Создание подкаталогов студентов
-        for /l %%s in (1,1,%max_students%) do (
-            md "Kurs%%c\Group%%g\Student%%s" 2>nul
-        )
+REM ================== Меню выбора операции ==================
+:MENU
+ECHO.
+ECHO ===========================================
+ECHO   1 - Архивировать файлы по каталогам
+ECHO   2 - Удалить архивные файлы (*.zip)
+ECHO   0 - Выход
+ECHO ===========================================
+ECHO.
+
+REM Ввод только числа
+SET "CHOICE_NUM="
+SET /P "CHOICE_NUM=Введите номер операции (0,1,2): "
+
+IF "%CHOICE_NUM%"=="0" GOTO :RESTORE_DIR
+IF "%CHOICE_NUM%"=="1" GOTO :DO_ARCHIVE
+IF "%CHOICE_NUM%"=="2" GOTO :DO_CLEAN
+
+ECHO [ОШИБКА] Некорректный выбор. Допустимо: 0, 1 или 2.
+GOTO :MENU
+
+REM ================== Режим архивации ==================
+:DO_ARCHIVE
+ECHO.
+ECHO [ИНФО] Запуск архивации в каталоге "%ROOT_DIR%".
+ECHO [ИНФО] Архиватор: "%ARCHIVER%".
+ECHO.
+
+PUSHD "%ROOT_DIR%" REM переходим в ROOT_DIR, а прошлый добавляется в стек
+IF ERRORLEVEL 1 (
+    ECHO [ОШИБКА] Не удалось перейти в каталог "%ROOT_DIR%".
+    GOTO :RESTORE_DIR
+)
+
+REM Сначала архивируем сам корневой каталог
+CALL :ARCHIVE_DIR "%CD%"
+
+REM Затем рекурсивно все подкаталоги
+FOR /D /R %%D IN (*) DO (
+    CALL :ARCHIVE_DIR "%%D"
+)
+
+POPD
+GOTO :RESTORE_DIR
+
+REM ---------- Процедура архивации одного каталога ----------
+:ARCHIVE_DIR
+REM %~1 - полный путь к каталогу
+SET "DIR_PATH=%~1"
+
+REM Защита от пустых значений
+IF "%DIR_PATH%"=="" GOTO :EOF
+
+REM Имя архива: полный путь каталога + .zip
+SET "ARCHIVE_PATH=%DIR_PATH%.zip"
+
+REM Если в каталоге нет файлов (только подкаталоги), то архиватор может ругаться.
+REM Проверяем наличие хотя бы одного файла.
+SET "HAS_FILES="
+FOR %%F IN ("%DIR_PATH%\*") DO (
+    IF EXIST "%%F" (
+        SET "HAS_FILES=1"
+        GOTO :HAS_FILES_FOUND
     )
 )
-echo Структура каталогов создана
-```
 
-7 Пакетный файл для перехода в личный каталог (goto_student_dir.bat)
-
-```cmd
-@echo off
-set course=%1
-
-echo Выбор группы:
-echo 1 - Group1
-echo 2 - Group2
-echo 3 - Group3
-set /p group="Выберите группу (1-3): "
-
-if "%group%"=="1" (
-    cd "Kurs%course%\Group1"
-) else if "%group%"=="2" (
-    cd "Kurs%course%\Group2"
-) else if "%group%"=="3" (
-    cd "Kurs%course%\Group3"
-) else (
-    echo Неверный выбор
-)
-```
-
-8 Пакетный файл для установки даты и времени (set_datetime.bat) (требует прав администратора)
-
-```cmd
-@echo off
-
-set new_date=%1
-set new_time=%2
-
-date %new_date%
-time %new_time%
-
-echo Дата и время установлены
-```
-
-9 Пакетный файл для очистки студенческих каталогов (clean_student_dirs.bat)
-
-```cmd
-@echo off
-REM %1 - список курсов
-set courses=%1
-
-for %%c in (%courses%) do (
-    del /s "Kurs%%c\*.bak"
-    del /s "Kurs%%c\*.tmp"
-    del /s "Kurs%%c\*.temp"
+:HAS_FILES_FOUND
+IF NOT DEFINED HAS_FILES (
+    ECHO [ИНФО] Каталог "%DIR_PATH%" пуст (нет файлов). Пропуск.
+    GOTO :EOF
 )
 
-echo Очистка завершена
-```
+ECHO [ИНФО] Архивация каталога: "%DIR_PATH%"
+ECHO        Архив: "%ARCHIVE_PATH%"
 
-10 Пакетный файл для вывода списка файлов студентов (list_student_files.bat)
-
-```cmd
-@echo off
-set group=%1
-echo Выбор направления вывода:
-echo 1 - На экран
-echo 2 - В файл
-echo 3 - На принтер
-set /p output="Выберите направление вывода (1-3): "
-
-if "%output%"=="1" (
-    dir /s "Group%group%"
-) else if "%output%"=="2" (
-    dir /s "Group%group%" > student_files.txt
-) else if "%output%"=="3" (
-    dir /s "Group%group%" > PRN
-) else (
-    echo Неверный выбор
-)
-```
-
-11 Пакетный файл для архивации каталога студента (archive_student.bat)
-
-```cmd
-@echo off
-
-REM %1 — путь к каталогу студента
-if exist "%1" (
-    cd "%1"
-
-    REM Архивация WinRAR
-    "C:\Program Files\WinRAR\WinRAR.exe" a -r "student_backup.zip" *.*
-
-    echo Каталог заархивирован
-) else (
-    echo Каталог не существует
-)
-```
-
-12 Пакетный файл для постраничного вывода файла (page_view.bat)
-
-```cmd
-@echo off
-REM Постраничный вывод файла с MORE
-
-set filename=%1
-more < "%filename%"
-```
-
-13 Пакетный файл для обновления документов (update_documents.bat)
-
-```cmd
-@echo off
-
-set source_dir=%1
-set target_dir=%2
-
-REM Копирование только изменённых файлов
-xcopy "%source_dir%\*.doc" "%target_dir%" /D /Y
-xcopy "%source_dir%\*.txt" "%target_dir%" /D /Y
-
-echo Документы обновлены
-```
-
-14 Пакетный файл для копирования документов студентов (copy_student_docs.bat)
-
-```cmd
-@echo off
-
-REM Поиск всех DOC и TXT рекурсивно
-for /r %%i in (*.doc *.txt) do (
-    copy "%%i" "%USERPROFILE%\Documents\"
+REM Вызов архиватора. Для 7z, например:
+REM "%ARCHIVER%" a "архив" "каталог\*"
+"%ARCHIVER%" a "%ARCHIVE_PATH%" "%DIR_PATH%\*" >NUL
+IF ERRORLEVEL 1 (
+    ECHO [ОШИБКА] Не удалось создать архив "%ARCHIVE_PATH%".
+) ELSE (
+    ECHO [OK] Архив создан: "%ARCHIVE_PATH%"
 )
 
-echo Документы скопированы в Мои документы
-```
+GOTO :EOF
 
-15 Пакетный файл для проверки документов в каталоге (check_documents.bat)
+REM ================== Режим удаления архивов ==================
+:DO_CLEAN
+ECHO.
+ECHO [ИНФО] Удаление архивов *.zip в дереве "%ROOT_DIR%".
+ECHO.
 
-```cmd
-@echo off
-
-set check_dir=%1
-
-REM Проверяем, есть ли файлы DOC или TXT
-dir "%check_dir%\*.doc" "%check_dir%\*.txt" >nul 2>&1
-
-if %errorlevel%==0 (
-    echo Найдены документы:
-    dir "%check_dir%\*.doc" "%check_dir%\*.txt" /b
-) else (
-    echo Документы не найдены
+REM Текущий каталог не меняем, работаем с полным путём
+FOR /R "%ROOT_DIR%" %%F IN (*.zip) DO (
+    DEL /Q "%%~fF" REM преобразует к полному пути
 )
+
+ECHO.
+ECHO [ИНФО] Удаление архивов завершено.
+GOTO :RESTORE_DIR
+
+REM ================== Восстановление исходного каталога ==================
+:RESTORE_DIR
+IF DEFINED OLD_DIR (
+    PUSHD "%OLD_DIR%" >NUL 2>&1
+    POPD >NUL 2>&1
+)
+GOTO :END
+
+:END
+ENDLOCAL
 ```
