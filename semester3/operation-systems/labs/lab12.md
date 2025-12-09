@@ -4,36 +4,14 @@
 
 ```cmd
 @ECHO OFF
+chcp 65001 >nul
 SETLOCAL ENABLEDELAYEDEXPANSION
 
 REM ================== Общие сведения о пакетном файле ==================
 SET "SCRIPT_NAME=%~nx0"
-SET "SCRIPT_AUTHOR=Бочко Денис Андреевич>"
+SET "SCRIPT_AUTHOR=Бочко Денис"
 SET "SCRIPT_DESC=Архивация файлов по каталогам и удаление архивов"
-SET "SCRIPT_USAGE=%SCRIPT_NAME% <путь_к_каталогу> <путь_к_архиватору>"
-
-REM ================== Вывод справки ==================
-:USAGE
-ECHO Имя:        %SCRIPT_NAME%
-ECHO Назначение: %SCRIPT_DESC%
-ECHO Применение: Архивирование файлов в каждом каталоге по отдельности
-ECHO             и удаление созданных архивов (ZIP).
-ECHO Автор:      %SCRIPT_AUTHOR%
-ECHO.
-ECHO Использование:
-ECHO   %SCRIPT_USAGE%
-ECHO.
-ECHO Параметры:
-ECHO   путь_к_каталогу   - корневой каталог, в котором обрабатываются все
-ECHO                       подкаталоги.
-ECHO   путь_к_архиватору - полный путь к консольному архиватору (например, 7z.exe).
-ECHO.
-ECHO Примеры:
-ECHO   %SCRIPT_NAME% "D:\Data" "C:\Tools\7z.exe"
-ECHO.
-ECHO При запуске без параметров или с ключом /? выводится эта справка.
-ECHO В процессе работы запросы с клавиатуры принимают ТОЛЬКО числовой ввод.
-GOTO :END
+SET "SCRIPT_USAGE=%SCRIPT_NAME% ^<путь_к_каталогу^> ^<путь_к_архиватору^>"
 
 REM ================== Точка входа ==================
 :START
@@ -51,7 +29,7 @@ SET "ROOT_DIR=%~1"
 SET "ARCHIVER=%~2"
 
 REM Проверка существования каталога
-IF NOT EXIST "%ROOT_DIR%\NUL" (
+IF NOT EXIST "%ROOT_DIR%\" (
     ECHO [ОШИБКА] Каталог "%ROOT_DIR%" не существует.
     GOTO :END
 )
@@ -62,7 +40,7 @@ IF NOT EXIST "%ARCHIVER%" (
     GOTO :END
 )
 
-REM Сохранение текущего каталога, чтобы не менять его снаружи
+REM Сохранение текущего каталога
 SET "OLD_DIR=%CD%"
 
 REM ================== Меню выбора операции ==================
@@ -75,7 +53,6 @@ ECHO   0 - Выход
 ECHO ===========================================
 ECHO.
 
-REM Ввод только числа
 SET "CHOICE_NUM="
 SET /P "CHOICE_NUM=Введите номер операции (0,1,2): "
 
@@ -86,94 +63,153 @@ IF "%CHOICE_NUM%"=="2" GOTO :DO_CLEAN
 ECHO [ОШИБКА] Некорректный выбор. Допустимо: 0, 1 или 2.
 GOTO :MENU
 
-REM ================== Режим архивации ==================
+REM ================== Вывод справки ==================
+:USAGE
+ECHO Имя:        %SCRIPT_NAME%
+ECHO Назначение: %SCRIPT_DESC%
+ECHO Применение: Архивирование файлов в каждом каталоге по отдельности
+ECHO             и удаление созданных архивов (ZIP).
+ECHO Автор:      %SCRIPT_AUTHOR%
+ECHO.
+ECHO Использование:
+ECHO   %SCRIPT_USAGE%
+ECHO.
+ECHO Параметры:
+ECHO   путь_к_каталогу   - корневой каталог
+ECHO   путь_к_архиватору - полный путь к 7z.exe
+ECHO.
+ECHO Пример:
+ECHO   %SCRIPT_NAME% "D:\Data" "C:\Program Files\7-Zip\7z.exe"
+GOTO :END
+
+REM ================== Архивация ==================
 :DO_ARCHIVE
-ECHO.
-ECHO [ИНФО] Запуск архивации в каталоге "%ROOT_DIR%".
-ECHO [ИНФО] Архиватор: "%ARCHIVER%".
-ECHO.
-
-PUSHD "%ROOT_DIR%" REM переходим в ROOT_DIR, а прошлый добавляется в стек
-IF ERRORLEVEL 1 (
-    ECHO [ОШИБКА] Не удалось перейти в каталог "%ROOT_DIR%".
-    GOTO :RESTORE_DIR
-)
-
-REM Сначала архивируем сам корневой каталог
+PUSHD "%ROOT_DIR%"
 CALL :ARCHIVE_DIR "%CD%"
-
-REM Затем рекурсивно все подкаталоги
-FOR /D /R %%D IN (*) DO (
-    CALL :ARCHIVE_DIR "%%D"
-)
-
+FOR /D /R %%D IN (*) DO CALL :ARCHIVE_DIR "%%D"
 POPD
 GOTO :RESTORE_DIR
 
-REM ---------- Процедура архивации одного каталога ----------
 :ARCHIVE_DIR
-REM %~1 - полный путь к каталогу
 SET "DIR_PATH=%~1"
-
-REM Защита от пустых значений
 IF "%DIR_PATH%"=="" GOTO :EOF
 
-REM Имя архива: полный путь каталога + .zip
 SET "ARCHIVE_PATH=%DIR_PATH%.zip"
 
-REM Если в каталоге нет файлов (только подкаталоги), то архиватор может ругаться.
-REM Проверяем наличие хотя бы одного файла.
 SET "HAS_FILES="
 FOR %%F IN ("%DIR_PATH%\*") DO (
     IF EXIST "%%F" (
         SET "HAS_FILES=1"
-        GOTO :HAS_FILES_FOUND
+        GOTO :FILES_FOUND
     )
 )
 
-:HAS_FILES_FOUND
+:FILES_FOUND
 IF NOT DEFINED HAS_FILES (
-    ECHO [ИНФО] Каталог "%DIR_PATH%" пуст (нет файлов). Пропуск.
+    ECHO [ИНФО] Каталог "%DIR_PATH%" пуст — пропуск.
     GOTO :EOF
 )
 
-ECHO [ИНФО] Архивация каталога: "%DIR_PATH%"
-ECHO        Архив: "%ARCHIVE_PATH%"
-
-REM Вызов архиватора. Для 7z, например:
-REM "%ARCHIVER%" a "архив" "каталог\*"
+ECHO [ИНФО] Архивация: "%DIR_PATH%"
 "%ARCHIVER%" a "%ARCHIVE_PATH%" "%DIR_PATH%\*" >NUL
+
 IF ERRORLEVEL 1 (
-    ECHO [ОШИБКА] Не удалось создать архив "%ARCHIVE_PATH%".
+    ECHO [ОШИБКА] Не удалось создать архив "%ARCHIVE_PATH%"
 ) ELSE (
     ECHO [OK] Архив создан: "%ARCHIVE_PATH%"
 )
-
 GOTO :EOF
 
-REM ================== Режим удаления архивов ==================
+REM ================== Удаление архивов ==================
 :DO_CLEAN
-ECHO.
-ECHO [ИНФО] Удаление архивов *.zip в дереве "%ROOT_DIR%".
-ECHO.
-
-REM Текущий каталог не меняем, работаем с полным путём
-FOR /R "%ROOT_DIR%" %%F IN (*.zip) DO (
-    DEL /Q "%%~fF" REM преобразует к полному пути
-)
-
-ECHO.
+FOR /R "%ROOT_DIR%" %%F IN (*.zip) DO DEL /Q "%%~fF"
 ECHO [ИНФО] Удаление архивов завершено.
 GOTO :RESTORE_DIR
 
-REM ================== Восстановление исходного каталога ==================
+REM ================== Восстановление каталога ==================
 :RESTORE_DIR
-IF DEFINED OLD_DIR (
-    PUSHD "%OLD_DIR%" >NUL 2>&1
-    POPD >NUL 2>&1
-)
+IF DEFINED OLD_DIR PUSHD "%OLD_DIR%" & POPD
 GOTO :END
 
 :END
 ENDLOCAL
+```
+
+## Результат работы
+
+```cmd
+C:\Users\andrn\test>DIR /S /B
+C:\Users\andrn\test\archive_folders.bat
+C:\Users\andrn\test\dir1
+C:\Users\andrn\test\dir1\dir2
+C:\Users\andrn\test\dir1\text4.txt
+C:\Users\andrn\test\dir1\dir2\text.txt
+C:\Users\andrn\test\dir1\dir2\text2.txt
+C:\Users\andrn\test\dir1\dir2\text3.txt
+
+C:\Users\andrn\test>archive_folders.bat
+Имя:        archive_folders.bat
+Назначение: Архивация файлов по каталогам и удаление архивов
+Применение: Архивирование файлов в каждом каталоге по отдельности
+            и удаление созданных архивов (ZIP).
+Автор:      Бочко Денис
+
+Использование:
+  archive_folders.bat <путь_к_каталогу> <путь_к_архиватору>
+
+Параметры:
+  путь_к_каталогу   - корневой каталог
+  путь_к_архиватору - полный путь к 7z.exe
+
+Пример:
+  archive_folders.bat "D:\Data" "C:\Program Files\7-Zip\7z.exe"
+
+C:\Users\andrn\test>archive_folders.bat "C:\Users\andrn\test" "C:\Program Files\7-Zip\7z.exe"
+
+===========================================
+  1 - Архивировать файлы по каталогам
+  2 - Удалить архивные файлы (*.zip)
+  0 - Выход
+===========================================
+
+Введите номер операции (0,1,2): 1
+[ИНФО] Архивация: "C:\Users\andrn\test"
+[OK] Архив создан: "C:\Users\andrn\test.zip"
+[ИНФО] Архивация: "C:\Users\andrn\test\dir1"
+[OK] Архив создан: "C:\Users\andrn\test\dir1.zip"
+[ИНФО] Архивация: "C:\Users\andrn\test\dir1\dir2"
+[OK] Архив создан: "C:\Users\andrn\test\dir1\dir2.zip"
+
+C:\Users\andrn\test>DIR /S /B
+C:\Users\andrn\test\archive_folders.bat
+C:\Users\andrn\test\dir1
+C:\Users\andrn\test\dir1.zip
+C:\Users\andrn\test\dir1\dir2
+C:\Users\andrn\test\dir1\dir2.zip
+C:\Users\andrn\test\dir1\text4.txt
+C:\Users\andrn\test\dir1\dir2\text.txt
+C:\Users\andrn\test\dir1\dir2\text2.txt
+C:\Users\andrn\test\dir1\dir2\text3.txt
+
+C:\Users\andrn\test>archive_folders.bat "C:\Users\andrn\test" "C:\Program Files\7-Zip\7z.exe"
+
+===========================================
+  1 - Архивировать файлы по каталогам
+  2 - Удалить архивные файлы (*.zip)
+  0 - Выход
+===========================================
+
+Введите номер операции (0,1,2): 2
+[ИНФО] Удаление архивов завершено.
+
+C:\Users\andrn\test>DIR /S /B
+C:\Users\andrn\test\archive_folders.bat
+C:\Users\andrn\test\dir1
+C:\Users\andrn\test\dir1\dir2
+C:\Users\andrn\test\dir1\text4.txt
+C:\Users\andrn\test\dir1\dir2\text.txt
+C:\Users\andrn\test\dir1\dir2\text2.txt
+C:\Users\andrn\test\dir1\dir2\text3.txt
+
+C:\Users\andrn\test>
 ```
