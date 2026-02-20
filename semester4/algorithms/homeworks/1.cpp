@@ -3,9 +3,16 @@
 void homework();
 void castingExample();
 void example2();
+void homework2();
 
+// Компилировать
+/* 
+clang++ semester4/algorithms/homeworks/1.cpp \
+-o semester4/algorithms/homeworks/1 && \
+./semester4/algorithms/homeworks/1
+*/
 int main() {
-    example2();
+    homework2();
 
     return 0;
 }
@@ -66,5 +73,18 @@ void example2() {
 
     for (int i = 0; i < sizeof(int); i++) {
         printf("%d\n", *pc); pc++;
+    }
+}
+
+// Вывести в 16 с.с. значение байтов переменной ul
+void homework2() {
+    unsigned long ul = 0xAE13C7DD;
+    unsigned long* pUl = &ul;
+
+    unsigned char* pc = (unsigned char*)pUl;
+
+    for (int i = 0; i < sizeof(ul); i++) {
+        printf("%d байт = %02X\n", i, *pc); 
+        pc++;
     }
 }
