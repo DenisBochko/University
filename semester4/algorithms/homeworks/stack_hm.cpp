@@ -5,7 +5,7 @@
 // ======================== БАЗОВЫЙ КОД СТЕКА ========================
 
 typedef struct Node {
-    int value; // заменил char на int для работы с отрицательными числами
+    int value;
     struct Node* next;
 } *pNode;
 
@@ -47,6 +47,11 @@ int pop(pStack pS) {
     free(p);
     pS->len--;
     return c;
+}
+
+// Получить значение вершины стека без извлечения
+int peek(pStack pS) {
+    return pS->top->value;
 }
 
 void showStack(pStack pS) {
@@ -147,12 +152,12 @@ void task2() {
     }
 
     if (!isEmpty(even_s))
-        printf("Вершина чётных: %d\n", even_s->top->value);
+        printf("Вершина чётных: %d\n", peek(even_s));
     else
         printf("Вершина чётных: null\n");
 
     if (!isEmpty(odd_s))
-        printf("Вершина нечётных: %d\n", odd_s->top->value);
+        printf("Вершина нечётных: %d\n", peek(odd_s));
     else
         printf("Вершина нечётных: null\n");
 
@@ -173,7 +178,7 @@ void task3() {
     showStack(first);
 
     // Перемещаем элементы, пока вершина first не станет чётной
-    while (!isEmpty(first) && (first->top->value % 2 != 0)) {
+    while (!isEmpty(first) && (peek(first) % 2 != 0)) {
         push(second, pop(first));
     }
 
@@ -186,12 +191,12 @@ void task3() {
     }
 
     if (!isEmpty(first))
-        printf("Вершина первого:  %d\n", first->top->value);
+        printf("Вершина первого:  %d\n", peek(first));
     else
         printf("Вершина первого:  null\n");
 
     if (!isEmpty(second))
-        printf("Вершина второго:  %d\n", second->top->value);
+        printf("Вершина второго:  %d\n", peek(second));
     else
         printf("Вершина второго:  null\n");
 
@@ -229,7 +234,7 @@ void task4() {
 }
 
 // Задание 5
-// Удалить каждый второй элемент (2-й, 4-й, 6-й... по порядку сверху)
+// Удалить каждый второй элемент
 void task5() {
     pStack src = createStack();
     pStack temp = createStack();
@@ -254,7 +259,7 @@ void task5() {
     printf("После удаления каждого 2-го: ");
     showStack(src);
 
-    clearStack(src);  free(src);
+    clearStack(src); free(src);
     clearStack(temp); free(temp);
 }
 
