@@ -2,6 +2,12 @@
 #include <stdlib.h>
 #include <time.h>
 
+/*
+clang ./semester4/algorithms/homeworks/stack_hm.cpp \
+-o ./semester4/algorithms/homeworks/stack_hm && \
+./semester4/algorithms/homeworks/stack_hm
+*/
+
 // ======================== БАЗОВЫЙ КОД СТЕКА ========================
 
 typedef struct Node {
@@ -92,20 +98,18 @@ void fillRandom(pStack pS, int n) {
 // Разделить стек на положительные и отрицательные
 void task1() {
     pStack src = createStack();
-    pStack pos = createStack();    // положительные
-    pStack neg = createStack();    // отрицательные
-    pStack temp = createStack();   // вспомогательный для сохранения порядка
+    pStack pos = createStack();
+    pStack neg = createStack();
+    pStack temp = createStack();
 
     fillRandom(src, 10);
     printf("Исходный стек: ");
     showStack(src);
 
-    // порядок развернётся
     while (!isEmpty(src)) {
         push(temp, pop(src));
     }
 
-    // порядок восстановится
     while (!isEmpty(temp)) {
         int c = pop(temp);
         if (c >= 0)
@@ -129,20 +133,18 @@ void task1() {
 // Разделить на чётные и нечётные, вывести вершины
 void task2() {
     pStack src = createStack();
-    pStack even_s = createStack();   // чётные
-    pStack odd_s = createStack();    // нечётные
+    pStack even_s = createStack();  
+    pStack odd_s = createStack(); 
     pStack temp = createStack();
 
     fillRandom(src, 10);
     printf("Исходный стек: ");
     showStack(src);
 
-    // порядок развернётся
     while (!isEmpty(src)) {
         push(temp, pop(src));
     }
 
-    // порядок восстановится
     while (!isEmpty(temp)) {
         int c = pop(temp);
         if (c % 2 == 0)
@@ -177,7 +179,6 @@ void task3() {
     printf("Исходный стек: ");
     showStack(first);
 
-    // Перемещаем элементы, пока вершина first не станет чётной
     while (!isEmpty(first) && (peek(first) % 2 != 0)) {
         push(second, pop(first));
     }
