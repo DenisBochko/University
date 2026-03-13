@@ -203,7 +203,6 @@ void task7() {
     pStack charStack = createStack();
     pStack temp = createStack();
 
-    // --- Открываем входной файл ---
     FILE* fin = fopen("input.txt", "r");
     if (!fin) {
         printf("Ошибка: не удалось открыть input.txt\n");
@@ -216,33 +215,29 @@ void task7() {
     printf("Содержимое файла: \"");
 
     int ch;
-    // --- Посимвольное чтение из файла ---
     while ((ch = fgetc(fin)) != EOF) {
         printf("%c", (char)ch);
 
         if ((char)ch == '#') {
-            // Стирающий символ — удалить вершину
+            // если стирающий символ, то удаляем вершину
             if (!isEmpty(charStack)) {
                 pop(charStack);
             }
         } else if ((char)ch == '@') {
-            // Символ-убийца — очистить весь стек
+            // если символ-убийца, то очистить весь стек
             clearStack(charStack);
         } else if ((char)ch != '\n' && (char)ch != '\r') {
-            // Обычный символ — помещаем в стек
-            // (переносы строк игнорируем)
+            // Обычный символ помещаем в стек
             push(charStack, ch);
         }
     }
     fclose(fin);
     printf("\"\n");
 
-    // --- Переворачиваем стек для правильного порядка ---
     while (!isEmpty(charStack)) {
         push(temp, pop(charStack));
     }
 
-    // --- Записываем результат в выходной файл ---
     FILE* fout = fopen("output.txt", "w");
     if (!fout) {
         printf("Ошибка: не удалось создать output.txt\n");
@@ -262,8 +257,8 @@ void task7() {
     fclose(fout);
     printf("Результат записан в output.txt\n");
 
-    free(charStack);
-    free(temp);
+    clearStack(charStack); free(charStack);
+    clearStack(temp); free(temp);
 }
 
 // Задание 8
@@ -276,46 +271,33 @@ void task8() {
     printf("Исходный стек: ");
     showStack(src);
 
-    if (isEmpty(src) || src->len == 1) {
-        printf("Менять нечего (0 или 1 элемент)\n");
-        clearStack(src); free(src);
-        free(temp);
-        return;
-    }
-
-    // 1) Извлекаем вершину
     int topVal = pop(src);
 
-    // 2) Перекладываем всё из src в temp
     while (!isEmpty(src)) {
         push(temp, pop(src));
     }
 
-    // 3) Извлекаем дно (оно теперь на вершине temp)
     int bottomVal = pop(temp);
 
-    // 4) Кладём старую вершину на место дна
     push(src, topVal);
 
-    // 5) Возвращаем середину обратно
     while (!isEmpty(temp)) {
         push(src, pop(temp));
     }
 
-    // 6) Кладём старое дно на место вершины
     push(src, bottomVal);
 
     printf("После обмена:  ");
     showStack(src);
 
     clearStack(src); free(src);
-    free(temp);
+    clearStack(temp); free(temp);
 }
 
 // Задание 9
 // Проверка правильности скобочной последовательности
 void task9() {
-    const char* input = "{[]({[]})}";  // можно менять для тестов
+    const char* input = "{[]({[]})}"; 
     printf("Строка: \"%s\"\n", input);
 
     pStack bracketStack = createStack();
@@ -326,10 +308,8 @@ void task9() {
         char ch = input[i];
 
         if (ch == '(' || ch == '[' || ch == '{') {
-            // Открывающая скобка — кладём в стек
             push(bracketStack, (int)ch);
         } else if (ch == ')' || ch == ']' || ch == '}') {
-            // Закрывающая скобка — проверяем пару
             if (isEmpty(bracketStack)) {
                 valid = 0;
             } else {
@@ -341,11 +321,9 @@ void task9() {
                 }
             }
         }
-        // Остальные символы игнорируем
         i++;
     }
 
-    // Если стек не пуст — есть незакрытые скобки
     if (!isEmpty(bracketStack)) {
         valid = 0;
     }
