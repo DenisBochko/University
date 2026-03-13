@@ -331,7 +331,7 @@ void task9() {
     if (valid)
         printf("Последовательность правильная\n");
     else
-        printf("Последовательность НЕправильная\n");
+        printf("Последовательность неправильная\n");
 
     clearStack(bracketStack);
     free(bracketStack);
