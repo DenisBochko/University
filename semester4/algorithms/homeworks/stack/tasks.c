@@ -219,16 +219,79 @@ void task7() {
         printf("%c", (char)ch);
 
         if ((char)ch == '#') {
-            // если стирающий символ, то удаляем вершину
             if (!isEmpty(charStack)) {
                 pop(charStack);
             }
         } else if ((char)ch == '@') {
-            // если символ-убийца, то очистить весь стек
             clearStack(charStack);
         } else if ((char)ch != '\n' && (char)ch != '\r') {
-            // Обычный символ помещаем в стек
             push(charStack, ch);
+        }
+    }
+    fclose(fin);
+    printf("\"\n");
+
+    while (!isEmpty(charStack)) {
+        push(temp, pop(charStack));
+    }
+
+    FILE* fout = fopen("output.txt", "w");
+    if (!fout) {
+        printf("Ошибка: не удалось создать output.txt\n");
+        clearStack(temp); free(temp);
+        free(charStack);
+        return;
+    }
+
+    printf("Результат:       \"");
+    while (!isEmpty(temp)) {
+        char c = (char)pop(temp);
+        printf("%c", c);
+        fputc(c, fout);
+    }
+    printf("\"\n");
+
+    fclose(fout);
+    printf("Результат записан в output.txt\n");
+
+    clearStack(charStack); free(charStack);
+    clearStack(temp); free(temp);
+}
+
+// Задание 7 switch 
+// Текстовый редактор: '#' стирает один символ, '@' стирает все
+// Чтение из файла input.txt, запись результата в output.txt
+void task7() {
+    pStack charStack = createStack();
+    pStack temp = createStack();
+
+    FILE* fin = fopen("input.txt", "r");
+    if (!fin) {
+        printf("Ошибка: не удалось открыть input.txt\n");
+        free(charStack);
+        free(temp);
+        return;
+    }
+
+    printf("Чтение из файла input.txt...\n");
+    printf("Содержимое файла: \"");
+
+    int ch;
+    while ((ch = fgetc(fin)) != EOF) {
+        printf("%c", (char)ch);
+
+        switch ((char)ch) {
+        case '#': 
+            if (!isEmpty(charStack)) {
+                pop(charStack);
+            }
+            break;
+        case '@':
+            clearStack(charStack);
+            break;
+        default: 
+            push(charStack, ch);
+            break;
         }
     }
     fclose(fin);

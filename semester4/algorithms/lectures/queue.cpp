@@ -26,65 +26,26 @@ bool isEmpty(pQueue pQ) {
     if (pQ->len > 0) return false;
     return true;
 }
-
-int put(pQueue pQ, int v) {
+// с лекции 
+void put(pQueue pQ, int value) {
     pNode p = (pNode)malloc(sizeof(Node));
-    if (p) {
-        p->value = v;
-        p->next = NULL;
+    p->value = value;
+    p->next = NULL;
 
-        if (isEmpty(pQ)) {
-            // Очередь пуста — новый элемент и начало, и конец
-            pQ->beg = p;
-            pQ->end = p;
-        } else {
-            // Добавляем в конец
-            pQ->end->next = p;
-            pQ->end = p;
-        }
-
-        pQ->len++;
-        return 1;
-    }
-    return 0;
+    if (pQ->end != NULL) pQ -> end -> next = p;
+    else pQ -> beg = p;
+    pQ->end = p;
+    pQ->len++;
 }
-
-// ========================
-// Извлечение элемента из начала очереди (dequeue)
-// ========================
-
+// с лекции 
 int take(pQueue pQ) {
-    if (isEmpty(pQ)) {
-        cout << "Queue is empty, nothing to take!" << endl;
-        return -1; // код ошибки
-    }
-
-    pNode temp = pQ->beg;
-    int val = temp->value;
-
-    pQ->beg = pQ->beg->next;
-    pQ->len--;
-
-    // Если очередь стала пустой — обнуляем и end
-    if (pQ->beg == NULL) {
-        pQ->end = NULL;
-    }
-
-    free(temp);
-    return val;
+    pNode p = pQ -> beg;
+    int value = p -> value;
+    pQ -> beg = p -> next;
+    free(p);
+    pQ -> len--;
+    return value;
 }
-
-// ========================
-// Освобождение памяти очереди (самой структуры)
-// ========================
-
-void freeQueue(pQueue pQ) {
-    free(pQ);
-}
-
-// ========================
-// Просмотр без разрушения (вариант 1 — вспомогательная очередь)
-// ========================
 
 void showQ_D1(pQueue pQ) {
     if (isEmpty(pQ)) {
@@ -102,13 +63,9 @@ void showQ_D1(pQueue pQ) {
         while (!isEmpty(pp)) {
             put(pQ, take(pp));
         }
-        freeQueue(pp);
+        free(pp);
     }
 }
-
-// ========================
-// Просмотр без разрушения (вариант 2 — через счётчик)
-// ========================
 
 void showQ_D2(pQueue pQ) {
     if (isEmpty(pQ)) {
@@ -125,10 +82,6 @@ void showQ_D2(pQueue pQ) {
     }
 }
 
-// ========================
-// Просмотр без разрушения (вариант 3 — просто обход указателей, без извлечения)
-// ========================
-
 void showQ(pQueue pQ) {
     if (isEmpty(pQ)) {
         puts("Queue is empty");
@@ -142,10 +95,6 @@ void showQ(pQueue pQ) {
     }
 }
 
-// ========================
-// Очистка очереди
-// ========================
-
 void clearQueue(pQueue pQ) {
     if (isEmpty(pQ)) {
         puts("Queue is empty");
@@ -154,44 +103,22 @@ void clearQueue(pQueue pQ) {
             take(pQ);
         }
     }
-    freeQueue(pQ);
+    free(pQ);
 }
 
-// ========================
-// Главная функция для демонстрации
-// ========================
-
 int main() {
-    pQueue myQueue = createQueue();
+    pQueue pQ = createQueue();
 
-    // Добавляем элементы
-    put(myQueue, 10);
-    put(myQueue, 20);
-    put(myQueue, 30);
-    put(myQueue, 40);
-    put(myQueue, 50);
+    for (int c = 0; c < 9; c++) put(pQ, 10);
 
-    cout << "=== Очередь после добавления ===" << endl;
-    showQ(myQueue);          // 10 20 30 40 50
+    showQ(pQ);
 
-    cout << "\n=== showQ_D1 (вспомогательная очередь) ===" << endl;
-    showQ_D1(myQueue);       // 10 20 30 40 50
+    while (!isEmpty(pQ)) {
+        take(pQ);
+        showQ(pQ);
+    }
 
-    cout << "\n=== showQ_D2 (через счётчик) ===" << endl;
-    showQ_D2(myQueue);       // 10 20 30 40 50
-
-    // Извлекаем два элемента
-    cout << "\n=== Извлечение ===" << endl;
-    cout << "take: " << take(myQueue) << endl;  // 10
-    cout << "take: " << take(myQueue) << endl;  // 20
-
-    cout << "\n=== Очередь после извлечения ===" << endl;
-    showQ(myQueue);          // 30 40 50
-
-    cout << "\nДлина очереди: " << myQueue->len << endl;
-
-    // Очистка
-    clearQueue(myQueue);
+    clearQueue(pQ);
 
     return 0;
 }
