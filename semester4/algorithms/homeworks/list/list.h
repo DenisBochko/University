@@ -3,6 +3,8 @@
 #include <time.h>
 #include <iostream>
 
+// Осталось выучить: delNode, addNode, putAfter, unicList
+
 typedef struct Node{
     int value;
     struct Node* next;
