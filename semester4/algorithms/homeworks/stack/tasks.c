@@ -261,7 +261,7 @@ void task7() {
 // Задание 7 switch 
 // Текстовый редактор: '#' стирает один символ, '@' стирает все
 // Чтение из файла input.txt, запись результата в output.txt
-void task7() {
+void task7_switch() {
     pStack charStack = createStack();
     pStack temp = createStack();
 
@@ -398,4 +398,69 @@ void task9() {
 
     clearStack(bracketStack);
     free(bracketStack);
+}
+
+int evaluatePostfix(const char* expr) {
+    pStack calcStack = createStack();
+    int i = 0;
+
+    printf("Постфиксная запись: %s\n", expr);
+
+    while (expr[i] != '\0') {
+        // Пропускаем пробелы
+        if (expr[i] == ' ') {
+            i++;
+            continue;
+        }
+
+        // читаем число
+        if (expr[i] >= '0' && expr[i] <= '9') {
+            int num = 0;
+            while (expr[i] >= '0' && expr[i] <= '9') {
+                num = num * 10 + (expr[i] - '0');
+                i++;
+            }
+            push(calcStack, num);
+            printf("  Читаем %d\t-> ", num);
+            showStack(calcStack);
+        }
+        // Если операция, то берём два числа из стека и считаем
+        else {
+            char op = expr[i];
+            int b = pop(calcStack);
+            int a = pop(calcStack);
+            int res = 0;
+
+            switch (op) {
+                case '+': res = a + b; break;
+                case '-': res = a - b; break;
+                case '*': res = a * b; break;
+                case '/': res = a / b; break;
+            }
+
+            push(calcStack, res);
+            printf("  Читаем %c\t-> %d %c %d = %d\t-> ", op, a, op, b, res);
+            showStack(calcStack);
+            i++;
+        }
+    }
+
+    int result = pop(calcStack);
+    clearStack(calcStack);
+    free(calcStack);
+    return result;
+}
+
+// Задание 10
+// Вычисление выражений а. (6+8)*5-6/2   b. (5+7)*3-4*3
+void task10() {
+    int result;
+
+    printf("Выражение a): (6+8)*5 - 6/2\n");
+    result = evaluatePostfix("6 8 + 5 * 6 2 / -");
+    printf("Результат: %d\n\n", result);   // Ожидается 67
+
+    printf("Выражение b): (5+7)*3 - 4*3\n");
+    result = evaluatePostfix("5 7 + 3 * 4 3 * -");
+    printf("Результат: %d\n\n", result);   // Ожидается 24
 }
