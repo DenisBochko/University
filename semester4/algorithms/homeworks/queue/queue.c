@@ -25,18 +25,19 @@ void put(pQueue pQ, int value) {
 }
 // с лекции 
 int take(pQueue pQ) {
-    pNode p = pQ -> beg;
-    int value = p -> value;
-    pQ -> beg = p -> next;
+    pNode p = pQ->beg;
+    int value = p->value;
+    pQ->beg = p->next;
     free(p);
-    pQ -> len--;
+    pQ->len--;
+    if (pQ->beg == NULL)
+        pQ->end = NULL;
     return value;
 }
 
 void showQ_D1(pQueue pQ) {
-    if (isEmpty(pQ)) {
-        puts("Queue is empty");
-    } else {
+    if (isEmpty(pQ)) puts("Queue is empty");
+    else {
         pQueue pp = createQueue();
         int c;
         while (!isEmpty(pQ)) {
@@ -46,9 +47,7 @@ void showQ_D1(pQueue pQ) {
         }
         printf("\n");
         // Возвращаем элементы обратно
-        while (!isEmpty(pp)) {
-            put(pQ, take(pp));
-        }
+        while (!isEmpty(pp)) put(pQ, take(pp));
         free(pp);
     }
 }
@@ -82,12 +81,8 @@ void showQ(pQueue pQ) {
 }
 
 void clearQueue(pQueue pQ) {
-    if (isEmpty(pQ)) {
-        puts("Queue is empty");
-    } else {
-        while (!isEmpty(pQ)) {
-            take(pQ);
-        }
+    while (!isEmpty(pQ)) {
+        take(pQ);
     }
     free(pQ);
 }

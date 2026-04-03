@@ -59,6 +59,12 @@ int addNodeAfter(pList pL, pNode pN, int newdate) {
     return 1;
 }
 
+void clearList(pList pL){
+    while (pL->top) {
+        delNode(pL, pL->top);
+    }
+}
+
 int putAfter(pList pL, int date, int date1) {
     // встав. узел со знач. date1 за узлов со знач date
     if (isEmpty(pL) || findNode(pL, date) == NULL) return 0;
@@ -84,6 +90,11 @@ int putAfter(pList pL, int date, int date1) {
     return 1;
 }
 
+void deleteList(pList pL){
+    clearList(pL);
+    free(pL);
+}
+
 int delNode(pList pL, pNode pN) {   // удаляет элемент списка, стоящий за узлом pN
     pNode p = pN->next;
     if (pL->len==1) {// исключение, в списке 1 узел
@@ -99,17 +110,6 @@ int delNode(pList pL, pNode pN) {   // удаляет элемент списк�
         return 1;
     }
     return 0;
-}
-
-void clearList(pList pL){
-    while (pL->top) {
-        delNode(pL, pL->top);
-    }
-}
-
-void deleteList(pList pL){
-    clearList(pL);
-    free(pL);
 }
 
 void UnicList(pList pL) {

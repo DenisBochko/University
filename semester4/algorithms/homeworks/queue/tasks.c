@@ -4,7 +4,7 @@
 // Напечатать: сначала < a, затем [a,b], затем > b
 void task1() {
     pQueue q = createQueue();
-    int n, val, a, b, i, len;
+    int n, val, a, b;
 
     printf("Введите a и b (a < b): ");
     scanf("%d %d", &a, &b);
@@ -13,44 +13,38 @@ void task1() {
     scanf("%d", &n);
 
     printf("Введите %d чисел: ", n);
-    for (i = 0; i < n; i++) {
+    while (n > 0) {
         scanf("%d", &val);
         put(q, val);
+        n--;
     }
 
     printf("Исходная очередь: ");
     showQ(q);
 
-    len = q->len;
+    pQueue less    = createQueue();
+    pQueue between = createQueue();
+    pQueue greater = createQueue();
 
-    pQueue result = createQueue();
-
-    for (i = 0; i < len; i++) {
+    while (!isEmpty(q)) {
         val = take(q);
         if (val < a)
-            put(result, val);
-        put(q, val);
-    }
-
-    for (i = 0; i < len; i++) {
-        val = take(q);
-        if (val >= a && val <= b)
-            put(result, val);
-        put(q, val);
-    }
-
-    for (i = 0; i < len; i++) {
-        val = take(q);
-        if (val > b)
-            put(result, val);
-        put(q, val);
+            put(less, val);
+        else if (val >= a && val <= b)
+            put(between, val);
+        else
+            put(greater, val);
     }
 
     printf("Результат: ");
-    showQ(result);
+    showQ(less);
+    showQ(between);
+    showQ(greater);
 
     clearQueue(q);
-    clearQueue(result);
+    clearQueue(less);
+    clearQueue(between);
+    clearQueue(greater);
 }
 
 // Задание 2
@@ -58,7 +52,7 @@ void task1() {
 void task2() {
     pQueue first = createQueue();
     pQueue second = createQueue();
-    int n, i;
+    int n;
 
     fillQueueRandom(first, 10);
     printf("Исходная очередь: ");
@@ -70,8 +64,9 @@ void task2() {
     if (n > first->len)
         n = first->len;
 
-    for (i = 0; i < n; i++) {
+    while (n > 0 && !isEmpty(first)) {
         put(second, take(first));
+        n--;
     }
 
     if (!isEmpty(first))
@@ -94,7 +89,7 @@ void task2() {
 }
 
 // Задание 3
-// Две очереди одинакового размера чередуем в одну
+// Две очереди одинакового размера, чередуем в одну
 void task3() {
     pQueue q1 = createQueue();
     pQueue q2 = createQueue();
@@ -112,6 +107,11 @@ void task3() {
         put(result, take(q1));
         put(result, take(q2));
     }
+
+    while (!isEmpty(q1))
+        put(result, take(q1));
+    while (!isEmpty(q2))
+        put(result, take(q2));
 
     printf("Результат: ");
     showQ(result);
@@ -156,4 +156,54 @@ void task4() {
 
     clearQueue(first);
     clearQueue(second);
+}
+
+// Задание 5
+// Циклический сдвиг очереди так, чтобы в начале стоял наибольший элемент
+void task5() {
+    pQueue q = createQueue();
+    pQueue tmp = createQueue();
+
+    fillQueueRandom(q, 10);
+    printf("Исходная очередь: ");
+    showQ(q);
+
+    if (isEmpty(q)) {
+        clearQueue(q);
+        clearQueue(tmp);
+        return;
+    }
+
+    int max = take(q);
+    put(tmp, max);
+
+    while (!isEmpty(q)) {
+        int val = take(q);
+        if (val > max)
+            max = val;
+        put(tmp, val);
+    }
+
+    while (!isEmpty(tmp)) {
+        put(q, take(tmp));
+    }
+
+    int val = take(q);
+    while (val != max) {
+        put(q, val);
+        val = take(q);
+    }
+    
+    while (!isEmpty(q)) {
+        put(tmp, take(q));
+    }
+
+    put(q, max);
+
+    while (!isEmpty(tmp)) {
+        put(q, take(tmp));
+    }
+
+    printf("После сдвига: ");
+    showQ(q);
 }
