@@ -148,7 +148,7 @@ void del_all(Node *root)
     free(root);
 }
 
-// preorder-обход с записью в файл
+// preorder с записью в файл
 void preorder_to_file(Node *root, FILE *fp)
 {
     if (!root) return;
