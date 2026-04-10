@@ -147,3 +147,46 @@ void del_all(Node *root)
     printf("DEL: %p -> %d\n", (void *)root, root->key);
     free(root);
 }
+
+// preorder-обход с записью в файл
+void preorder_to_file(Node *root, FILE *fp)
+{
+    if (!root) return;
+    fprintf(fp, "%d\n", root->key);
+    preorder_to_file(root->left, fp);
+    preorder_to_file(root->right, fp);
+}
+
+// Сохранить дерево в текстовый файл
+int save_tree(Node *root, const char *filename)
+{
+    FILE *fp = fopen(filename, "w");
+    if (!fp) {
+        perror("save_tree: fopen");
+        return -1;
+    }
+    preorder_to_file(root, fp);
+    fclose(fp);
+    return 0;
+}
+
+// Чтение дерева из файла
+Node *load_tree(const char *filename)
+{
+    FILE *fp = fopen(filename, "r");
+    if (!fp) {
+        perror("load_tree: fopen");
+        return NULL;
+    }
+
+    Node *root = NULL;
+    int key;
+
+    // Читаем ключи по одному и вставляем в BST
+    while (fscanf(fp, "%d", &key) == 1) {
+        root = add_node(key, root);
+    }
+
+    fclose(fp);
+    return root;
+}

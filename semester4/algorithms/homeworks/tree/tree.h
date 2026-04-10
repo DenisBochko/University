@@ -19,3 +19,8 @@ Node *del_tree(Node *root, int val);
 void  count_nodes(Node *root, int *count);
 void  tree_height(Node *root, int depth, int *max_h);
 void  del_all(Node *root);
+void  preorder_to_file(Node *root, FILE *fp);
+int   save_tree(Node *root, const char *filename);
+Node *load_tree(const char *filename);
+
+void task0();
