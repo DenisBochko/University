@@ -140,35 +140,12 @@ void splitList(pList L, pList E1, pList E2)
 {
     pNode p = L->top;
 
-    pNode tail1 = NULL;
-    pNode tail2 = NULL;
-
     while (p) {
-        pNode pnew = (pNode)malloc(sizeof(struct Node));
-        if (!pnew) return;
-        pnew->value = p->value;
-        pnew->next  = NULL;
-
         if (p->value > 0) {
-            if (!E1->top) {
-                E1->top = pnew;
-                tail1   = pnew;
-            } else {
-                tail1->next = pnew;
-                tail1       = pnew;
-            }
-            E1->len++;
+            addNodeAfter(E1, getPointer(E1, p->value), p->value);
         } else {
-            if (!E2->top) {
-                E2->top = pnew;
-                tail2   = pnew;
-            } else {
-                tail2->next = pnew;
-                tail2       = pnew;
-            }
-            E2->len++;
+            addNodeAfter(E2, getPointer(E2, p->value), p->value);
         }
-
         p = p->next;
     }
 }

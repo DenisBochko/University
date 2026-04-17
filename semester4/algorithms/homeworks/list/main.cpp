@@ -13,6 +13,17 @@ int main(){
     pNode p;
     pList List = createList();
     int com=1, a, b;
+
+    int testData[] = {5, -3, 12, -7, 1, -9, 8, 0, -2, 4};
+    int testSize = sizeof(testData) / sizeof(testData[0]);
+
+    for (int i = 0; i < testSize; i++) {
+        addNodeAfter(List, getPointer(List, testData[i]), testData[i]);
+    }
+
+    printf("Initial list: ");
+    showList(List);
+    printf("\n\n");
     while (com) {
         puts("1-add");
         puts("2-find");
@@ -61,6 +72,7 @@ int main(){
         }
         case 4: {
             showList(List);
+            printf("\n");
             break;
         }
         case 5: {
@@ -75,6 +87,7 @@ int main(){
             cin >> b;
             putAfter(List, a, b);
             showList(List);
+            printf("\n");
             break;
         }
         case 7: {
@@ -86,10 +99,12 @@ int main(){
         case 8: {
             pList E1 = createList();
             pList E2 = createList();
+            printf("\nSource list:     ");
+            showList(List);
             splitList(List, E1, E2);
-            printf("\nPositive (E1): ");
+            printf("\nPositive (E1):   ");
             showList(E1);
-            printf("\nOther    (E2): ");
+            printf("\nOther    (E2):   ");
             showList(E2);
             printf("\n");
             deleteList(E1);
