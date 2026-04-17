@@ -1,4 +1,4 @@
-#include <list.h>
+#include "list.h"
 
 pList createList(){
     pList New = (pList)malloc(sizeof(struct List));
@@ -133,4 +133,61 @@ void UnicList(pList pL) {
         }
         if (p) p = p->next;
     }
+}
+
+// Задание 1: Разделение списка на положительные
+void splitList(pList L, pList E1, pList E2)
+{
+    pNode p = L->top;
+
+    pNode tail1 = NULL;
+    pNode tail2 = NULL;
+
+    while (p) {
+        pNode pnew = (pNode)malloc(sizeof(struct Node));
+        if (!pnew) return;
+        pnew->value = p->value;
+        pnew->next  = NULL;
+
+        if (p->value > 0) {
+            if (!E1->top) {
+                E1->top = pnew;
+                tail1   = pnew;
+            } else {
+                tail1->next = pnew;
+                tail1       = pnew;
+            }
+            E1->len++;
+        } else {
+            if (!E2->top) {
+                E2->top = pnew;
+                tail2   = pnew;
+            } else {
+                tail2->next = pnew;
+                tail2       = pnew;
+            }
+            E2->len++;
+        }
+
+        p = p->next;
+    }
+}
+
+// Задание 3: Переворот списка 
+void reverseList(pList pL)
+{
+    if (isEmpty(pL)) return;
+
+    pNode prev = NULL;
+    pNode curr = pL->top;
+    pNode next = NULL;
+
+    while (curr) {
+        next       = curr->next;   
+        curr->next = prev;       
+        prev       = curr;       
+        curr       = next;
+    }
+
+    pL->top = prev;
 }

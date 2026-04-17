@@ -1,6 +1,13 @@
-#include <list.h>
+#include "list.h"
 
 using namespace std;
+
+/*
+clang++ ./semester4/algorithms/homeworks/list/list.cpp \
+./semester4/algorithms/homeworks/list/main.cpp \
+-o ./semester4/algorithms/homeworks/list/list_hm && \
+./semester4/algorithms/homeworks/list/list_hm
+*/
 
 int main(){
     pNode p;
@@ -14,6 +21,8 @@ int main(){
         puts("5-clear");
         puts("6-Add after");
         puts("7-Unic List");
+        puts("8-positive-negative");
+        puts("9-reverse list");
         puts("0-exit");
         cin>>com;
         switch (com){
@@ -72,6 +81,28 @@ int main(){
             UnicList(List);
             showList(List);
             cout << "Len_pL=" << List->len<<endl;
+            break;
+        }
+        case 8: {
+            pList E1 = createList();
+            pList E2 = createList();
+            splitList(List, E1, E2);
+            printf("\nPositive (E1): ");
+            showList(E1);
+            printf("\nOther    (E2): ");
+            showList(E2);
+            printf("\n");
+            deleteList(E1);
+            deleteList(E2);
+            break;
+        }
+        case 9: {
+            printf("Before reverse: ");
+            showList(List);
+            reverseList(List);
+            printf("\nAfter reverse:  ");
+            showList(List);
+            printf("\n");
             break;
         }
         }

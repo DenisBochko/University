@@ -26,3 +26,5 @@ int delNode(pList pL, pNode pN);
 void clearList(pList pL);
 void deleteList(pList pL);
 void UnicList(pList pL);
+void splitList(pList L, pList E1, pList E2);
+void reverseList(pList pL);
