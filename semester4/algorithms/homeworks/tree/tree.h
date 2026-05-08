@@ -24,3 +24,4 @@ int   save_tree(Node *root, const char *filename);
 Node *load_tree(const char *filename);
 
 void task0();
+void task1();
