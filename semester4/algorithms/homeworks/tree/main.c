@@ -4,6 +4,7 @@
 clang ./semester4/algorithms/homeworks/tree/tree.c \
 ./semester4/algorithms/homeworks/tree/main.c \
 ./semester4/algorithms/homeworks/tree/task1.c \
+./semester4/algorithms/homeworks/tree/task2.c \
 -o ./semester4/algorithms/homeworks/tree/tree_hm && \
 ./semester4/algorithms/homeworks/tree/tree_hm
 */

@@ -2,27 +2,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* Построение сбалансированного дерева из отсортированного массива */
-Node* build_balanced(int arr[], int left, int right)
-{
+Node* insert_balanced(int arr[], int left, int right, Node *root) {
     if (left > right)
-        return NULL;
+        return root;
 
     int mid = (left + right) / 2;
 
-    Node* node = (Node *)malloc(sizeof(Node));
-    if (!node) return NULL;
+    root = add_node(arr[mid], root);
 
-    node->key   = arr[mid];
-    node->left  = build_balanced(arr, left, mid - 1);
-    node->right = build_balanced(arr, mid + 1, right);
+    root = insert_balanced(arr, left, mid - 1, root);
+    root = insert_balanced(arr, mid + 1, right, root);
 
-    return node;
+    return root;
 }
 
-/* Сумма элементов на уровне k (корень — уровень 1) */
-void sum_at_level(Node* root, int current_level, int k, long long* sum)
-{
+void sum_at_level(Node *root, int current_level, int k, int *sum) {
     if (!root) return;
 
     if (current_level == k) {
@@ -39,27 +33,27 @@ void task1()
     int arr[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
     int n = sizeof(arr) / sizeof(arr[0]);
 
-    Node *root = build_balanced(arr, 0, n - 1);
+    Node *root = NULL;
+    root = insert_balanced(arr, 0, n - 1, root);
 
     printf("Сбалансированное дерево:\n");
     inorder(root);
     printf("\n");
 
-    /* Используем tree_height из tree.c */
     int h = 0;
     tree_height(root, 0, &h);
     printf("Высота дерева: %d\n\n", h);
 
     int k;
-    printf("Введите уровень k (1..%d): ", h);
+    printf("Введите уровень k: ");
     if (scanf("%d", &k) != 1 || k < 1 || k > h) {
         printf("Некорректный уровень!\n");
         del_all(root);
         return;
     }
 
-    long long sum = 0;
+    int sum = 0;
     sum_at_level(root, 1, k, &sum);
 
-    printf("Сумма элементов на уровне %d = %lld\n", k, sum);
+    printf("Сумма элементов на уровне %d = %d\n", k, sum);
 }
