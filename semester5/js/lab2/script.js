@@ -1,18 +1,15 @@
 function task1() {
     let number = 123456789;
-    let remainder = number % 3;
     let sumDigits = 0;
 
     for (let i = 0; i < String(number).length; i++) {
         sumDigits += Number(String(number)[i]);
     }
 
-    let remainderSum = sumDigits % 3;
-
   alert(
     `Число: ${number}\n` +
-    `Делится ли число на 3 без остатка: ${remainder % 3 == 0 ? 'да' : 'нет'} \n` +
-    `Делится ли сумма цифр числа (${sumDigits}) на 3 без остатка: ${remainderSum % 3 == 0 ? 'да' : 'нет'}`
+    `Делится ли число на 3 без остатка: ${number % 3 === 0 ? 'да' : 'нет'} \n` +
+    `Делится ли сумма цифр числа (${sumDigits}) на 3 без остатка: ${sumDigits % 3 == 0 ? 'да' : 'нет'}`
   );
 }
 
@@ -104,13 +101,13 @@ function task5() {
 
 function task6() {
     function sortArray(array) {
-        if (typeof array[0] === 'number') {
-            return array.sort(function (a, b) {
-                return a - b;
-            });
+      return array.slice().sort(function (a, b) {
+        if (typeof a === 'number' && typeof b === 'number') {
+          return a - b;
         }
 
-        return array.sort();
+        return String(a).localeCompare(String(b));
+      });
     }
 
     let numbers = [32, 7, 90, -4, 15, 900, 64];
@@ -131,4 +128,4 @@ function task7() {
     alert(`Через 5 дней: ${getWeekDay(5)}\nЧерез 177 дней: ${getWeekDay(177)}`);
 }
 
-task7();
+task3();
