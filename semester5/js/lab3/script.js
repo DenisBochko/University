@@ -11,57 +11,67 @@ function task3() {
 
 function task4() {
     function bisect(equ, a, b, eps) {
-        let leftValue = equ(a);
-        let rightValue = equ(b);
+        let valueOnLeft = equ(a);
+        let valueOnRight = equ(b);
 
-        if (leftValue * rightValue > 0) {
-            return 'На отрезке нет корня';
+        if (valueOnLeft === 0) {
+            return a;
+        }
+
+        if (valueOnRight === 0) {
+            return b;
+        }
+
+        if (valueOnLeft * valueOnRight > 0) {
+            return 'На отрезке нет смены знака';
         }
 
         while (b - a > eps) {
-            let middle = (a + b) / 2;
-            let middleValue = equ(middle);
+          let middle = (a + b) / 2;
 
-            if (middleValue === 0) {
-                return middle;
-            }
+          let valueInMiddle = equ(middle);
 
-            if (leftValue * middleValue < 0) {
-                b = middle;
-                rightValue = middleValue;
-            } else {
-                a = middle;
-                leftValue = middleValue;
-            }
+          if (valueInMiddle === 0) {
+            return middle;
+          }
+
+          // Оставляем ту половину отрезка, где функция меняет знак.
+          if (valueOnLeft * valueInMiddle < 0) {
+            b = middle;
+          } else {
+            a = middle;
+            valueOnLeft = valueInMiddle;
+          }
         }
 
         return (a + b) / 2;
     }
 
-    let firstRoot = bisect(function (x) {
+    function firstEqu(x) {
         return x * x - Math.cos(x);
-    }, 0, 1, 0.001);
+    }
 
-    let secondRoot = bisect(function (x) {
+    function secondEqu(x) {
         return x ** 4 + 1.5 - Math.sin(x);
-    }, 0, 1, 0.001);
+    }
+
+    let firstRoot = bisect(firstEqu, 0, 1, 0.001);
+    let secondRoot = bisect(secondEqu, 0, 1, 0.001);
 
     alert(
-        `x² - cos(x): ${typeof firstRoot === 'number' ? firstRoot.toFixed(3) : firstRoot}\n` +
-        `x⁴ + 1.5 - sin(x): ${typeof secondRoot === 'number' ? secondRoot.toFixed(3) : secondRoot}`
+        `x**2 - cos(x): ${firstRoot}\n` +
+        `x**4 + 1.5 - sin(x): ${secondRoot}`
     );
 }
 
 function task5() {
     function showClock() {
-        let date = new Date();
-        let time = [date.getHours(), date.getMinutes(), date.getSeconds()];
+        let now = new Date();
+        let hours = String(now.getHours()).padStart(2, '0');
+        let minutes = String(now.getMinutes()).padStart(2, '0');
+        let seconds = String(now.getSeconds()).padStart(2, '0');
 
-        for (let i = 0; i < time.length; i++) {
-            time[i] = String(time[i]).padStart(2, '0');
-        }
-
-        document.getElementById('clock').textContent = time.join(':');
+        document.getElementById('clock').textContent = hours + ':' + minutes + ':' + seconds;
     }
 
     document.write('<h2>Текущее время</h2><p id="clock"></p>');
@@ -71,49 +81,92 @@ function task5() {
 
 function task6() {
     let users = [
-        { name: 'John', age: 30 },
-        { name: 'Bob', age: 21 },
-        { name: 'Anna', age: 19 }
+      {
+        name: 'John',
+        age: 30
+      },
+      {
+        name: 'Bob',
+        age: 21
+      },
+      {
+        name: 'Anna',
+        age: 19
+      }
     ];
-    let an_obj = { 100: 'a', 2: 'b', 7: 'c' };
-    let menu = { width: 200, height: 300, title: 'My menu' };
-    let bob;
 
-    function getKeys(object) {
-        return Object.keys(object);
-    }
-
-    function addLogs(object) {
-        for (let key in object) {
-            if (typeof object[key] === 'number') {
-                object['log_' + key] = Math.log10(object[key]);
-            }
-        }
-    }
-
-    function removeNonNumeric(object) {
-        for (let key in object) {
-            if (typeof object[key] !== 'number') {
-                delete object[key];
-            }
-        }
-    }
+    let u;
 
     for (let i = 0; i < users.length; i++) {
         if (users[i].name === 'Bob') {
-            bob = users[i];
+            u = users[i];
+            break;
         }
     }
 
-    addLogs(menu);
-    removeNonNumeric(menu);
-
-    document.write(
-        '<h2>Объекты</h2>' +
-        '<p>Bob: ' + JSON.stringify(bob) + '</p>' +
-        '<p>Ключи an_obj: ' + getKeys(an_obj).join(', ') + '</p>' +
-        '<p>menu: ' + JSON.stringify(menu) + '</p>'
-    );
+    alert('Имя: ' + u.name + '\nВозраст: ' + u.age);
 }
 
-task3();
+function task7() {
+    let an_obj = {
+      100: 'a',
+      2: 'b',
+      7: 'c'
+    };
+
+    function getKeys(object) {
+      let keys = []
+      for (let key in object) {
+        keys.push(key)
+      }
+
+      return keys
+    }
+
+    let keys = getKeys(an_obj);
+    alert('Ключи объекта: ' + keys.join(', '));
+}
+
+function task8a() {
+    let obj = {
+        width: 200,
+        height: 300,
+        title: 'My menu'
+    };
+
+    for (let key in obj) {
+      if (typeof obj[key] === 'number') {
+          obj['log_' + key] = Math.log10(obj[key]);
+      }
+    }
+
+    let res = ''
+    for (let key in obj) {
+        res += `key: ${key}, value: ${obj[key]}\n`
+    }
+
+    alert(res)
+}
+
+function task8b() {
+    let obj = {
+        width: 200,
+        height: 300,
+        title: 'My menu'
+    };
+
+    for (let key in obj) {
+      if (typeof obj[key] !== 'number') {
+          delete obj[key];
+      }
+    }
+
+    let res = ''
+    for (let key in obj) {
+        res += `key: ${key}, value: ${obj[key]}\n`
+    }
+
+    alert(res)
+}
+
+task8b();
