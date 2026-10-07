@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Задание 2</title>
+</head>
+<body>
+    <table border="1">
+        <tr>
+            <th>x</th>
+            <th>sin x</th>
+            <th>cos x</th>
+            <th>tg x</th>
+        </tr>
+        <tbody id="tableBody"></tbody>
+    </table>
+
+    <script>
+        let tableBody = document.getElementById('tableBody');
+
+        for (let degrees = 0; degrees <= 90; degrees += 15) {
+            let radians = degrees * Math.PI / 180; // переводим в радианы, т.к. функции принимают именно их
+
+            let sin = Math.sin(radians).toFixed(3);
+            let cos = Math.cos(radians).toFixed(3);
+            let tan;
+
+            if (degrees === 90) {
+                tan = 'не определено';
+            } else {
+                tan = Math.tan(radians).toFixed(3);
+            }
+
+            tableBody.innerHTML += `
+                <tr>
+                    <td>${degrees}</td>
+                    <td>${sin}</td>
+                    <td>${cos}</td>
+                    <td>${tan}</td>
+                </tr>`;
+        }
+    </script>
+</body>
+</html>
