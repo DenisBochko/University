@@ -64,7 +64,7 @@ ALTER TABLE book
 ADD COLUMN weight INTEGER CONSTRAINT CH_book_weight CHECK (weight > 0 AND weight < 100);
 
 -- 7. Убедиться в том, что ограничение на вес работает (попробуйте вставить невалидное значение)
-INSERT INTO publisher (publisher_name) VALUES ('Денис');
+INSERT INTO publisher (publisher_name) VALUES ('Артём');
 
 -- не взлетит
 INSERT INTO book (book_id, title, isbn, publisher_id, weight)
@@ -85,7 +85,7 @@ CREATE TABLE student (
 );
 
 -- 9. Вставить запись в таблицу студентов и убедиться, что ограничение на вставку значения по умолчанию работает
-INSERT INTO student (student_name) VALUES ('Бочко Денис Андреевич');
+INSERT INTO student (student_name) VALUES ('Беспалов Артём Андреевич');
 INSERT INTO student (student_name, year) VALUES ('Ермаков Генадий Генадиевич', 3);
 
 SELECT * FROM student;
@@ -95,7 +95,7 @@ ALTER TABLE student
 ALTER COLUMN year DROP DEFAULT;
 
 -- ошибка: null value in column "year" of relation "student" violates not-null constraint
-INSERT INTO student (student_name) VALUES ('Бочко Денис Андреевич');
+INSERT INTO student (student_name) VALUES ('Беспалов Артём Андреевич');
 
 -- 11. Подключиться к БД northwind и добавить ограничение на поле unit price таблицы products (цена должна быть больше 0)
 ALTER TABLE products
