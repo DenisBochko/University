@@ -1,9 +1,9 @@
--- 1. Создать представление, которое выводит следующие колонки: order_date, required date, shipped date, 
+-- 1. Создать представление, которое выводит следующие колонки: order_date, required date, shipped date,
 -- ship postal code, company_name, contact name, phone, last name, first name, title из таблиц orders, customers и employees.
 -- Сделать select к созданному представлению, выведя все записи, где order_date больше 1-то января 1997 года
-CREATE VIEW orders_customers_employees AS 
-SELECT order_date, required_date, shipped_date, 
-  ship_postal_code, company_name, 
+CREATE VIEW orders_customers_employees AS
+SELECT order_date, required_date, shipped_date,
+  ship_postal_code, company_name,
   contact_name, phone, last_name, first_name, title
 FROM orders
 JOIN customers ON orders.customer_id = customers.customer_id
@@ -15,28 +15,28 @@ WHERE order_date > '1997-01-01';
 DROP VIEW orders_customers_employees;
 
 -- 2. Создать представление, которое выводит следующие колонки:
--- order_date, required_date, shipped_date, ship_postal_code, 
+-- order_date, required_date, shipped_date, ship_postal_code,
 -- ship_country, company_name, contact_name, phone, last_name, first_name, title из таблиц
 -- orders, customers, employees
 
--- Попробовать добавить к представлению (после его создания) колонки ship_country, postal_code и reports_to 
+-- Попробовать добавить к представлению (после его создания) колонки ship_country, postal_code и reports_to
 -- (добавить не в конец, а куда-нибудь посередине). Убедиться, что происходит ошибка.
 -- Переименовать представление и создать новое уже с дополнительными колонками;
 -- Сделать к нему запрос, выбрав все записи, отсортировав их по
 -- ship_country;
 -- Удалить переименованное представление.
 CREATE VIEW orders_customers_employees AS
-SELECT order_date, required_date, shipped_date, ship_postal_code, 
+SELECT order_date, required_date, shipped_date, ship_postal_code,
   ship_country, company_name, contact_name, phone, last_name, first_name, title
 FROM orders
 JOIN customers ON orders.customer_id = customers.customer_id
 JOIN employees ON orders.employee_id = employees.employee_id;
 
 -- не сработает
-CREATE OR REPLACE VIEW orders_customers_employees AS 
-SELECT 
+CREATE OR REPLACE VIEW orders_customers_employees AS
+SELECT
   customers.postal_code, reports_to, -- новые поля
-  order_date, required_date, shipped_date, ship_postal_code, 
+  order_date, required_date, shipped_date, ship_postal_code,
   ship_country, company_name, contact_name, phone, last_name, first_name, title
 FROM orders
 JOIN customers ON orders.customer_id = customers.customer_id
@@ -46,11 +46,11 @@ ALTER VIEW orders_customers_employees
 RENAME TO orders_customers_employees_old;
 
 -- сработает
-CREATE VIEW orders_customers_employees AS 
-SELECT 
-  order_date, required_date, shipped_date, ship_postal_code, 
+CREATE VIEW orders_customers_employees AS
+SELECT
+  order_date, required_date, shipped_date, ship_postal_code,
   ship_country, company_name, contact_name, phone, last_name, first_name, title,
-  customers.postal_code, reports_to -- новые поля 
+  customers.postal_code, reports_to -- новые поля
 FROM orders
 JOIN customers ON orders.customer_id = customers.customer_id
 JOIN employees ON orders.employee_id = employees.employee_id;
@@ -61,7 +61,26 @@ ORDER BY ship_country;
 
 DROP VIEW orders_customers_employees_old;
 
--- 3.Создать представление "активных" (discontinued = 0) продуктов, содержащее все колонки. 
+-- 3.Создать представление "активных" (discontinued = 0) продуктов, содержащее все колонки.
 -- Представление должно быть защищено от вставки записей, в которых discontinued = 1.
 -- Попробовать сделать вставку записи с полем discontinued = 1 - убедиться, что не проходит.
+CREATE VIEW active_products AS
+SELECT * FROM products
+WHERE discontinued = 0
+WITH LOCAL CHECK OPTION;
 
+INSERT INTO active_products
+(product_id, product_name, supplier_id, category_id,
+  quantity_per_unit, unit_price, units_in_stock,
+  units_on_order, reorder_level, discontinued)
+VALUES (100, 'Lechebnaya Trava', 8, 1, '5 boxes * 10 packs', 18, 39, 1, 10, 1);
+
+-- new row violates check option for view "discontinued_products"
+
+В представление нельзя вставить данные, если:
+1) Есть join нескольких таблиц
+2) Есть агрегатные функции: COUNT, SUM, AVG, MIN, MAX и т. п
+3) Есть GROUP BY или HAVING, DISTINCT, UNION, INTERSECT, EXCEPT, LIMIT или OFFSET.
+4) Есть вычисляемый столбец
+
+Для вставок в сложные представления можно написать триггер, но это уже совсем другая история
