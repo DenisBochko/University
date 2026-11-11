@@ -68,6 +68,7 @@ CREATE VIEW active_products AS
 SELECT * FROM products
 WHERE discontinued = 0
 WITH LOCAL CHECK OPTION;
+-- CASCADED есть ещё
 
 INSERT INTO active_products
 (product_id, product_name, supplier_id, category_id,

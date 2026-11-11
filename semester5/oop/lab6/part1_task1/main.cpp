@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cstring>
-#include <windows.h>
+
 using namespace std;
 
 class Base1 {
@@ -39,7 +39,7 @@ public:
 };
 
 // Порядок наследования определяет порядок создания базовых частей.
-class Derived : public Base1, public Base2 {
+class Derived : public Base2, public Base1 {
 private:
     char ch;
 public:
@@ -47,9 +47,10 @@ public:
         ch = 'V';
         cout << "Конструктор Derived без параметров" << endl;
     }
+
     // Даже если поменять Base2 и Base1 местами ниже,
     // первым всё равно будет создан Base1 (он первый в списке наследования).
-    Derived(char c, char* text, int x) : Base2(text), Base1(x) {
+    Derived(char c, char* text, int x) : Base1(x), Base2(text) {
         ch = c;
         cout << "Конструктор Derived с параметрами" << endl;
     }
@@ -57,7 +58,7 @@ public:
     char get() { return ch; }
 
     friend ostream& operator<<(ostream& out, Derived& obj) {
-        // get() есть во всех трёх классах: указываем класс явно.
+        // get() есть во всех трёх классах, поэтому указываем класс явно
         out << "i = " << obj.Base1::get() << endl;
         out << "name = " << obj.Base2::get() << endl;
         out << "ch = " << obj.get() << endl;
@@ -65,14 +66,19 @@ public:
     }
 };
 
+/*
+clang++ /Users/denis/Documents/programming/University/semester5/oop/lab6/part1_task1/main.cpp \
+-o /Users/denis/Documents/programming/University/semester5/oop/lab6/part1_task1/main && \
+/Users/denis/Documents/programming/University/semester5/oop/lab6/part1_task1/main
+*/
+
 int main() {
-    SetConsoleOutputCP(CP_UTF8);
     cout << "Первый объект:" << endl;
     Derived a;
     cout << a;
 
     cout << "\nВторой объект:" << endl;
-    char text[] = "Барсик"; // Изменяемый массив для параметра char*
+    char text[] = "Барсик";
     Derived b('B', text, 25);
     cout << b;
     return 0;

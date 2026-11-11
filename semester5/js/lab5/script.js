@@ -8,10 +8,12 @@ function task1() {
     const student1 = new Person('Бочко Денис', 20);
     const student2 = new Person('Бондаренко Илья', 25, 'Developer');
     const student3 = new Person('Селин Денис', 30, NaN);
+    const student4 = new Person('Гетеров Денис', 36, false);
 
     console.log('Без profession:', student1);
     console.log('С profession:', student2);
-    console.log('При profession = NaN:', student3); // присваивается NaN, т.к. параметр передан
+    console.log('При profession = NaN:', student3);
+    console.log('При profession = false:', student4);
 }
 
 function task2() {
@@ -24,7 +26,7 @@ function task2() {
             const secondNumber = Number(prompt('Введите второе число:'));
 
             if (!Number.isFinite(firstNumber) || !Number.isFinite(secondNumber)) {
-                console.log('Ошибка: необходимо ввести два числа.');
+                console.log('Ошибка: необходимо ввести два числа');
                 return false;
             }
 
@@ -46,10 +48,10 @@ function task2() {
         },
 
         div() {
-            if (this.secondNumber === 0) {
+            if (this.firstNumber === 0) {
                 return 'Деление на ноль невозможно';
             }
-            return this.firstNumber / this.secondNumber;
+            return this.secondNumber / this.firstNumber;
         }
     };
 
@@ -131,13 +133,12 @@ function task6() {
         [unique]: 'Уникальное значение'
     };
 
-    console.log('Свойства, перечисленные через for...in:');
+    console.log('свойства через for...in:');
     for (const key in user) {
         console.log(`${key}: ${user[key]}`);
     }
 
-    console.log('Символьное свойство:', user[unique]);
-    console.log('for...in не выводит свойства с ключами Symbol.');
+    console.log('свойство с символом', user[unique]);
 }
 
-task6();
+task4();

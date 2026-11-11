@@ -1,10 +1,8 @@
 #include <iostream>
-#include <windows.h>
 #include "new_fig.h"
 using namespace std;
 
 int main() {
-    SetConsoleOutputCP(CP_UTF8);
     Circle circle(3);
     Rectangle rectangle(4, 5);
     Rectangle square(6);
@@ -25,3 +23,21 @@ int main() {
     // Figure f; // Ошибка: абстрактный класс.
     return 0;
 }
+
+/*
+    clang++ -std=c++17 -Wall -Wextra -Wpedantic \
+    -c /Users/denis/Documents/programming/University/semester5/oop/lab6/part2_task2/figure.cpp \
+    -o /Users/denis/Documents/programming/University/semester5/oop/lab6/part2_task2/figure.o && \
+    clang++ -std=c++17 -Wall -Wextra -Wpedantic \
+    -c /Users/denis/Documents/programming/University/semester5/oop/lab6/part2_task2/triangle.cpp \
+    -o /Users/denis/Documents/programming/University/semester5/oop/lab6/part2_task2/triangle.o && \
+    clang++ -std=c++17 -Wall -Wextra -Wpedantic \
+    -c /Users/denis/Documents/programming/University/semester5/oop/lab6/part2_task2/fig_main.cpp \
+    -o /Users/denis/Documents/programming/University/semester5/oop/lab6/part2_task2/fig_main.o && \
+    clang++ \
+    /Users/denis/Documents/programming/University/semester5/oop/lab6/part2_task2/fig_main.o \
+    /Users/denis/Documents/programming/University/semester5/oop/lab6/part2_task2/figure.o \
+    /Users/denis/Documents/programming/University/semester5/oop/lab6/part2_task2/triangle.o \
+    -o /Users/denis/Documents/programming/University/semester5/oop/lab6/part2_task2/main && \
+    /Users/denis/Documents/programming/University/semester5/oop/lab6/part2_task2/main
+ */

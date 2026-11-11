@@ -1,8 +1,8 @@
 #include <iostream>
 #include <cstdlib>
-#include <windows.h>
 using namespace std;
 
+// Абстрактный класс фигура
 class Figure {
 public:
     virtual double area() = 0; // Чисто виртуальная функция
@@ -51,8 +51,13 @@ public:
     const double* getBAddress() const { return &b; }
 };
 
+/*
+clang++ /Users/denis/Documents/programming/University/semester5/oop/lab6/part2_task1/main.cpp \
+-o /Users/denis/Documents/programming/University/semester5/oop/lab6/part2_task1/main && \
+/Users/denis/Documents/programming/University/semester5/oop/lab6/part2_task1/main
+*/
+
 int main() {
-    SetConsoleOutputCP(CP_UTF8);
     Circle circle(3);
     Rectangle rectangle(4, 5);
     Rectangle square(6);
@@ -64,7 +69,7 @@ int main() {
          << ", a: " << rectangle.getAAddress()
          << ", b: " << rectangle.getBAddress() << endl;
 
-    // Figure f; // Ошибка компиляции: Figure — абстрактный класс.
+    // Figure f; это ошибка компиляции, потому что Figure это абстрактный класс.
     Figure* figures[] = {&circle, &rectangle, &square};
     cout << "\nВсе фигуры:" << endl;
     for (int i = 0; i < 3; i++) {

@@ -1,9 +1,8 @@
 #include <iostream>
 #include <string>
-#include <windows.h>
+
 using namespace std;
 
-// virtual нужен, чтобы в Beefalo была ОДНА общая часть DomesticAnimal.
 class DomesticAnimal {
 protected:
     double weight;
@@ -26,6 +25,8 @@ public:
     }
 };
 
+// virtual - если общий предок встретится через несколько ветвей,
+// то хранить его в объекте только один раз
 class Cow : virtual public DomesticAnimal {
 public:
     Cow() {}
@@ -57,19 +58,24 @@ public:
     }
     void print() {
         cout << "Beefalo" << endl;
-        // Явно выбираем ветви, иначе имя print неоднозначно.
-        Cow::print();
-        Buffalo::print();
+        // Виртуальное наследование оставляет одну общую часть DomesticAnimal.
+        DomesticAnimal::print();
     }
 };
 
+/*
+clang++ /Users/denis/Documents/programming/University/semester5/oop/lab6/part1_task2/main.cpp \
+-o /Users/denis/Documents/programming/University/semester5/oop/lab6/part1_task2/main && \
+/Users/denis/Documents/programming/University/semester5/oop/lab6/part1_task2/main
+*/
+
 int main() {
-    SetConsoleOutputCP(CP_UTF8);
     Cow cow(450, 90000, "коричневый");
     Beefalo beefalo(280, 70000, "чёрный");
     cout << "Корова:" << endl;
     cow.print();
     cout << "\nТеленок:" << endl;
     beefalo.print();
+    
     return 0;
 }
