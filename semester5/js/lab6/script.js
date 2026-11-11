@@ -136,3 +136,5 @@ function task7() {
 }
 
 task7();
+
+// подписывайтесь на тг канал https://t.me/reelcy0x00
