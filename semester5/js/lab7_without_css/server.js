@@ -3,8 +3,6 @@ const fs = require('fs');
 const path = require('path');
 
 const port = 3000;
-const publicDir = path.join(__dirname, 'public');
-const lastname = 'Бочко';
 
 function page(title, content) {
   return `
@@ -23,12 +21,13 @@ function page(title, content) {
   <main>
     ${content}
   </main>
-  <footer>Сервер администрирует: ${lastname} (Вариант 12)</footer>
+  <footer>Сервер администрирует: Денис Бочко (Вариант 12)</footer>
 </body>
 </html>`;
 }
 
-const home = page('Бронирование отелей', `
+const homePage = page(
+  'Бронирование отелей', `
   <h1>Бронирование отелей</h1>
   <p>Отель «Орбита» встречает гостей панорамным остеклением и подсветкой фасада.
   В номерах можно настроить освещение по своему вкусу и отдохнуть с видом на вечерний город.
@@ -36,62 +35,76 @@ const home = page('Бронирование отелей', `
   Перед бронированием проверьте, включён ли в стоимость завтрак.
   Если планы могут измениться, выбирайте тариф с бесплатной отменой.</p>
   <figure>
-    <img src="/media-1" alt="Футуристический фасад отеля с панорамным остеклением">
+    <img src="/media-1" alt="Футуристический фасад отеля с панорамным остеклением" width="700">
     <figcaption>Фасад отеля</figcaption>
   </figure>
   <figure>
-    <img src="/media-2" alt="Гостиничный номер с двуспальной кроватью и панорамным окном">
+    <img src="/media-2" alt="Гостиничный номер с двуспальной кроватью и панорамным окном" width="180">
     <figcaption>Гостиничный номер</figcaption>
-  </figure>`);
+  </figure>`
+);
 
-const about = page('О проекте', '<h1>О проекте</h1><p>Учебный сайт о бронировании отелей для лабораторной работы № 7 по JavaScript. Вариант 12.</p>');
-const notFound = page('404 — Страница не найдена', '<h1>404 — Страница не найдена</h1><p>Проверьте адрес или <a href="/">вернитесь на главную</a>.</p>');
+const aboutPage = page(
+  'О проекте',
+  `<h1>О проекте</h1>
+  <p>Учебный сайт о бронировании отелей для лабы по JavaScript. Вариант 12.</p>`
+);
+
+const notFoundPage = page(
+  '404 Страница не найдена',
+  `<h1>404 Страница не найдена</h1>
+  <p>Проверьте адрес или <a href="/">вернитесь на главную</a>.</p>`
+);
 
 function sendHtml(res, status, html) {
-  res.writeHead(
-    status,
-    {
-      'Content-Type': 'text/html; charset=utf-8'
-    }
-  );
+  res.writeHead(status, { 'Content-Type': 'text/html; charset=utf-8' });
   res.end(html);
 }
 
-function sendImage(res, [file, ...fallbacks]) {
-  fs.readFile(path.join(publicDir, file), (error, data) => {
+function sendImage(res, file) {
+  const imagePath = path.join(path.join(__dirname, 'public'), file);
+
+  fs.readFile(imagePath, (error, data) => {
     if (error?.code === 'ENOENT') {
-      if (fallbacks.length) return sendImage(res, fallbacks);
-      return sendHtml(res, 404, notFound);
+      sendHtml(res, 404, notFoundPage);
+      return;
     }
 
     if (error) {
-      return sendHtml(res, 500, page('500 — Ошибка сервера', '<h1>500 — Ошибка сервера</h1><p>Не удалось прочитать изображение.</p>'));
+      const errorPage = page(
+        '500 Ошибка сервера',
+        `<h1>500 Ошибка сервера</h1>
+        <p>Не удалось прочитать изображение.</p>`
+      );
+      sendHtml(res, 500, errorPage);
+      return;
     }
 
-    const type = path.extname(file) === '.png' ? 'image/png' : 'image/jpeg';
-
-    res.writeHead(200, { 'Content-Type': type, 'Content-Length': data.length });
+    res.writeHead(200, { 'Content-Type': 'image/png', 'Content-Length': data.length });
     res.end(data);
   });
 }
 
-const imageRoutes = {
-  '/img1.png': ['img1.png'],
-  '/img2.png': ['img2.png'],
-  '/media-1': ['img1.png'],
-  '/media-2': ['img2.png'],
-};
-
 const server = http.createServer((req, res) => {
+  if (req.method !== 'GET') {
+    res.writeHead(405, { 'Allow': 'GET', 'Content-Type': 'text/plain; charset=utf-8' });
+    return res.end('Метод не поддерживается');
+  }
+
   const route = req.url.split('?')[0];
 
-  if (route === '/') return sendHtml(res, 200, home);
-  if (route === '/about') return sendHtml(res, 200, about);
+  if (route === '/') return sendHtml(res, 200, homePage);
+  if (route === '/about') return sendHtml(res, 200, aboutPage);
+
+  const imageRoutes = {
+    '/media-1': 'img1.png',
+    '/media-2': 'img2.png',
+  };
 
   if (Object.hasOwn(imageRoutes, route)) return sendImage(res, imageRoutes[route]);
 
-  return sendHtml(res, 404, notFound);
-})
+  return sendHtml(res, 404, notFoundPage);
+});
 
 server.listen(port, () => {
   console.log(`Сервер запущен на порту ${port}`);
