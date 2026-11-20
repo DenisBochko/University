@@ -2,6 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
+const host = '0.0.0.0';
 const port = 3000;
 
 function page(title, content) {
@@ -99,6 +100,8 @@ const server = http.createServer((req, res) => {
   const imageRoutes = {
     '/media-1': 'img1.png',
     '/media-2': 'img2.png',
+    '/img1.png': 'img1.png',
+    '/img2.png': 'img2.png',
   };
 
   if (Object.hasOwn(imageRoutes, route)) return sendImage(res, imageRoutes[route]);
@@ -106,6 +109,6 @@ const server = http.createServer((req, res) => {
   return sendHtml(res, 404, notFoundPage);
 });
 
-server.listen(port, () => {
-  console.log(`Сервер запущен на порту ${port}`);
+server.listen(port, host, () => {
+  console.log(`Сервер запущен на http://${host}:${port}`);
 });
