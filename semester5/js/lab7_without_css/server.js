@@ -63,7 +63,7 @@ function sendHtml(res, status, html) {
 }
 
 function sendImage(res, file) {
-  const imagePath = path.join(path.join(__dirname, 'public'), file);
+  const imagePath = path.join(__dirname, 'public', file);
 
   fs.readFile(imagePath, (error, data) => {
     if (error?.code === 'ENOENT') {
@@ -95,7 +95,7 @@ const server = http.createServer((req, res) => {
   const route = req.url.split('?')[0];
 
   if (route === '/') return sendHtml(res, 200, homePage);
-  if (route === '/about') return sendHtml(res, 200, aboutPage);
+  if (route === '/a.html') return sendHtml(res, 200, aboutPage);
 
   const imageRoutes = {
     '/media-1': 'img1.png',
